@@ -15,7 +15,7 @@
             <input type="submit" value="Show all reservations">
         </form>
     </div>
-<%--Показать все брони--%>
+<%--Показать актуальные брони--%>
     <div>
         <form action="reservationController" method="get">
             <input type="hidden" name="command" value="user_cabinet_page">
@@ -35,8 +35,9 @@
             <div>User's reservations:</div>
             <c:forEach items="${sessionScope.userReservations}" var="reservation">
                 <div>${reservation}</div>
+                <br>
                 <div>
-                    <c:if test="${reservation.bookStatus.name() ne 'CANCELLED'}">
+                    <c:if test="${reservation.bookStatus.name() eq 'RESERVED'}">
                      <form action="reservationController" method="post">
                             <input type="hidden" name="command" value="reservation_payment">
                             <input type="hidden" name="reservationId" value="${reservation.id}">

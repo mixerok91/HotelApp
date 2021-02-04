@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @WebFilter(filterName = "AuthorizationFilter",
         servletNames = "ReservationController",
-        urlPatterns = "/reservation/*")
+        urlPatterns = {"/reservation/*", "/userCabinet/*"})
 
 public class AuthorizationFilter implements Filter {
     @Override

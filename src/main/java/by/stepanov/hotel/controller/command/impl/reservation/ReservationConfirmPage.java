@@ -1,8 +1,10 @@
 package by.stepanov.hotel.controller.command.impl.reservation;
 
 import by.stepanov.hotel.controller.command.Command;
-import by.stepanov.hotel.entity.*;
-import by.stepanov.hotel.service.BillService;
+import by.stepanov.hotel.entity.Bill;
+import by.stepanov.hotel.entity.BookStatus;
+import by.stepanov.hotel.entity.Reservation;
+import by.stepanov.hotel.entity.User;
 import by.stepanov.hotel.service.RoomService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
@@ -19,7 +21,7 @@ public class ReservationConfirmPage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         RoomService roomService = ServiceProvider.getRoomService();
-        BillService billService = ServiceProvider.getBillService();
+
         try {
             Reservation reservation = new Reservation();
             reservation.setRoom(roomService.readRoom(Long.parseLong(request.getParameter("roomId"))));
@@ -28,7 +30,16 @@ public class ReservationConfirmPage implements Command {
             reservation.setOutDate(LocalDate.parse(request.getParameter("outDate")));
             reservation.setBookStatus(BookStatus.RESERVED);
 
+            Bill bill = new Bill();
+            bill.setPaid(false);
+            long days = reservation.getInDate().until(reservation.getOutDate(), ChronoUnit.DAYS);
+            bill.setTotalAmount(days * reservation.getRoom().getDayCost());
+
+            bill.setReservation(reservation);
+
             request.getSession().setAttribute("selectedReservation", reservation);
+            request.getSession().setAttribute("selectedBill", bill);
+
             response.sendRedirect("reservationConfirm");
         } catch (ServiceException e) {
             System.err.println(e);

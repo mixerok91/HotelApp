@@ -26,25 +26,16 @@ public class ReservationPayment implements Command {
             Reservation reservation =
                     reservationService.readReservation(Long.parseLong(request.getParameter("reservationId")));
 
+
             Bill bill = billService.readBillByReservationId(reservation.getId());
-
+            bill.setPaid(true);
             reservation.setBookStatus(BookStatus.PAID_FOR);
-            if (bill == null){
-                bill = new Bill();
-                bill.setReservation(reservation);
-                bill.setPaid(true);
-                long days = reservation.getInDate().until(reservation.getOutDate(), ChronoUnit.DAYS);
-                bill.setTotalAmount(days * reservation.getRoom().getDayCost());
-
-                billService.createBill(bill);
-            } else {
-                bill.setPaid(true);
-                billService.updateBill(bill);
-            }
 
             reservationService.updateReservation(reservation);
+            billService.updateBill(bill);
 
             response.sendRedirect("reservationController?command=user_cabinet_page");
+//            TODO Logger...
         } catch (ServiceException e) {
             System.err.println(e);
             response.sendRedirect("error?errorMessage=Ooops, something went wrong");

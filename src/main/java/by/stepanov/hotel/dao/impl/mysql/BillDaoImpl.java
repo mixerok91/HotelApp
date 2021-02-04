@@ -47,7 +47,7 @@ public class BillDaoImpl implements BillDao {
                     "JOIN users ON users.id = reservations.users_id " +
                     "JOIN rooms ON rooms.id = reservations.rooms_id " +
                     "JOIN room_type ON room_type.id = rooms.room_type_id";
-    private static final String READ_ALL_BILLS_BY_RESERVATION_ID_QUERY =
+    private static final String READ_ALL_BILL_BY_RESERVATION_ID_QUERY =
             "SELECT bills.id, bills.total_amount, bills.is_paid_for, " +
                     "reservations.id, reservations.creation_time, reservations.in_date, reservations.out_date, reservations.book_status, reservations.is_visible, " +
                     "reservations.users_id, users.email, users.password, users.firstname, users.surname, users.role, " +
@@ -77,10 +77,10 @@ public class BillDaoImpl implements BillDao {
 
             preparedStatement.executeUpdate();
 //            TODO: add logger
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -102,14 +102,14 @@ public class BillDaoImpl implements BillDao {
             preparedStatement.setLong(1, billId);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 bill = readBillResultSet(resultSet);
             }
             return bill;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -122,7 +122,7 @@ public class BillDaoImpl implements BillDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
-        try{
+        try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(UPDATE_BILL_QUERY);
 
@@ -132,10 +132,10 @@ public class BillDaoImpl implements BillDao {
             preparedStatement.setLong(4, bill.getId());
 
             preparedStatement.execute();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -148,16 +148,16 @@ public class BillDaoImpl implements BillDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
-        try{
+        try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(DELETE_BILL_BY_ID_QUERY);
 
             preparedStatement.setLong(1, billId);
             preparedStatement.execute();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -178,15 +178,15 @@ public class BillDaoImpl implements BillDao {
             preparedStatement = connection.prepareStatement(READ_ALL_BILLS_QUERY);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 Bill bill = readBillResultSet(resultSet);
                 bills.add(bill);
             }
             return bills;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -204,20 +204,23 @@ public class BillDaoImpl implements BillDao {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(READ_ALL_BILLS_BY_RESERVATION_ID_QUERY);
+            preparedStatement = connection.prepareStatement(READ_ALL_BILL_BY_RESERVATION_ID_QUERY);
+            preparedStatement.setLong(1, reservationId);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+
+            while (resultSet.next()) {
                 bill = readBillResultSet(resultSet);
             }
+
             return bill;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
             throw new DAOException("SQL error", e);
-        } catch (ConnectionPoolException e){
+        } catch (ConnectionPoolException e) {
             throw new DAOException("Connection pool error", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            connectionPool.closeConnection(connection, preparedStatement);
         }
     }
 

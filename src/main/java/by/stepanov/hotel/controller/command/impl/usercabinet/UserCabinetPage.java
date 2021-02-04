@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class UserCabinetPage implements Command {
@@ -26,7 +27,8 @@ public class UserCabinetPage implements Command {
                     reservationService.getReservationsByUser((User) session.getAttribute("user"));
 
             userReservations.removeIf(reservation -> reservation.getBookStatus().equals(BookStatus.CANCELLED)
-                    ||reservation.getBookStatus().equals(BookStatus.FINISHED));
+                    ||reservation.getBookStatus().equals(BookStatus.FINISHED)
+                    ||reservation.getInDate().isBefore(LocalDate.now()));
 
             session.setAttribute("userReservations", userReservations);
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReservationDao {
 
-    void createReservation(Reservation reservation) throws DAOException;
+    Reservation createReservation(Reservation reservation) throws DAOException;
 
     Reservation readReservation(long reservationId) throws DAOException;
 

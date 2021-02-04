@@ -13,7 +13,7 @@
     </c:if>
 
     <h1>Welcome to "Prancing Pony" Inn</h1>
-    <div>Hello ${sessionScope.user.firstName}</div>
+    <div>Hello '${sessionScope.user.firstName}'</div>
 
 <%--Ссылка на логинацию/регистрацию или логаут--%>
     <c:if test="${sessionScope.user == null}">

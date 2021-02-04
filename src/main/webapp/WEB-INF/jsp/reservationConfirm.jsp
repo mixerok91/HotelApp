@@ -7,12 +7,16 @@
 </head>
 <body>
     Reservation confirm
-    <h3>${sessionScope.get("selectedReservation")}</h3>
+    <h4>${sessionScope.selectedReservation}</h4><br>
+    <h2>Total amount: ${sessionScope.selectedBill.totalAmount}</h2>
     <form action="reservationController" name="post">
         <input type="hidden" name="command" value="reservation_confirm">
         <input type="submit" value="Confirm reservation">
     </form>
-    <a href="reservationController?command=reservation_page">To room select</a><br>
+    <form action="reservationController" name="get">
+        <input type="hidden" name="command" value="reservation_undo">
+        <input type="submit" value="Cancel reservation">
+    </form>
     <a href="mainController?command=main_page">To main page</a>
 </body>
 </html>

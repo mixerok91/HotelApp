@@ -147,7 +147,6 @@ public class Reservation {
                 ", isVisible=" + isVisible +
                 ", user=" + user +
                 ", room=" + room +
-                ", bill=" + bill +
                 '}';
     }
 }

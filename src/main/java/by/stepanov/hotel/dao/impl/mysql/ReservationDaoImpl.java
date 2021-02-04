@@ -6,10 +6,7 @@ import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
 import by.stepanov.hotel.entity.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,17 +61,21 @@ public class ReservationDaoImpl implements ReservationDao {
                     "JOIN rooms ON rooms.id = reservations.rooms_id " +
                     "JOIN room_type ON room_type.id = rooms.room_type_id " +
                     "WHERE users.id= ?";
+    private static final String GET_LAST_INSERT_ID =
+            "SELECT LAST_INSERT_ID() FROM reservations";
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     @Override
-    public void createReservation(Reservation reservation) throws DAOException {
+    public Reservation createReservation(Reservation reservation) throws DAOException {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        ResultSet resultSet = null;
+        Long lastId = null;
         try {
             connection = connectionPool.takeConnection();
+
             preparedStatement = connection.prepareStatement(CREATE_RESERVATION_QUERY);
 
             preparedStatement.setLong(1, reservation.getUser().getId());
@@ -86,6 +87,17 @@ public class ReservationDaoImpl implements ReservationDao {
             preparedStatement.setBoolean(7, reservation.isVisible());
 
             preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            preparedStatement = connection.prepareStatement(GET_LAST_INSERT_ID);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                lastId = resultSet.getLong(1);
+            }
+
+            reservation.setId(lastId);
+            return reservation;
 //            TODO: add logger
         } catch (SQLException e){
             System.err.println(e);

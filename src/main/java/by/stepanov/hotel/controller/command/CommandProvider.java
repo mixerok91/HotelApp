@@ -28,6 +28,7 @@ public class CommandProvider {
 
         commands.put(ParameterName.RESERVATION_CONFIRM_PAGE, new ReservationConfirmPage());
         commands.put(ParameterName.RESERVATION_CONFIRM, new ReservationConfirm());
+        commands.put(ParameterName.RESERVATION_UNDO, new ReservationUndo());
 
         commands.put(ParameterName.USER_CABINET_PAGE, new UserCabinetPage());
         commands.put(ParameterName.SHOW_ALL_USERS_RESERVATIONS, new ShowAllUsersReservations());
