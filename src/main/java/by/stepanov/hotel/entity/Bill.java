@@ -9,7 +9,10 @@ public class Bill {
     public Bill() {
     }
 
-    public Bill(Long id, double totalAmount, boolean isPaid, Reservation reservation) {
+    public Bill(Long id,
+                double totalAmount,
+                boolean isPaid,
+                Reservation reservation) {
         this.id = id;
         this.totalAmount = totalAmount;
         this.isPaid = isPaid;

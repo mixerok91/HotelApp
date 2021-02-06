@@ -7,7 +7,6 @@ import by.stepanov.hotel.entity.Bill;
 import by.stepanov.hotel.service.BillService;
 import by.stepanov.hotel.service.ServiceException;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class BillServiceImpl implements BillService {

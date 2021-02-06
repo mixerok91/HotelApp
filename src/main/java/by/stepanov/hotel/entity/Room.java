@@ -12,7 +12,11 @@ public class Room {
     public Room() {
     }
 
-    public Room(Long id, String roomNumber, int persons, double dayCost, String picturePath) {
+    public Room(Long id,
+                String roomNumber,
+                int persons,
+                double dayCost,
+                String picturePath) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.persons = persons;

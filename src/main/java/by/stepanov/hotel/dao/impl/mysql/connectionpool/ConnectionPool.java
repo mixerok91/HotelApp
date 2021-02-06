@@ -71,7 +71,7 @@ public class ConnectionPool {
             closeConnectionQueue(connectionQueue);
             closeConnectionQueue(givenAwayConQueue);
         }catch (SQLException e){
-
+            e.printStackTrace();
         }
     }
 

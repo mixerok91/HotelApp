@@ -208,7 +208,6 @@ public class BillDaoImpl implements BillDao {
             preparedStatement.setLong(1, reservationId);
             resultSet = preparedStatement.executeQuery();
 
-
             while (resultSet.next()) {
                 bill = readBillResultSet(resultSet);
             }

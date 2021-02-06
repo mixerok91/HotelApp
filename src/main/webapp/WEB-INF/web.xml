@@ -66,4 +66,5 @@
     <servlet-name>EditUserData</servlet-name>
     <url-pattern>/editUserData</url-pattern>
   </servlet-mapping>
+
 </web-app>

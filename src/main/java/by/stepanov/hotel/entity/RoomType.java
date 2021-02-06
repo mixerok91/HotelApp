@@ -13,7 +13,10 @@ public class RoomType {
     public RoomType() {
     }
 
-    public RoomType(Long id, String typeName, String descriptionRus, String descriptionEng) {
+    public RoomType(Long id,
+                    String typeName,
+                    String descriptionRus,
+                    String descriptionEng) {
         this.id = id;
         this.typeName = typeName;
         this.descriptionRus = descriptionRus;

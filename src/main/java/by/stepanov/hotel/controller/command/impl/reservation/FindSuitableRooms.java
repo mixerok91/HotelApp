@@ -37,6 +37,11 @@ public class FindSuitableRooms implements Command {
                 request.setAttribute("dateError", "Date must be not before today");
                 hasErrors = true;
             }
+            if (LocalDate.parse(inDate).isEqual(LocalDate.parse(outDate))){
+                request.setAttribute("dataError", "In date and out date must not be equals");
+                hasErrors = true;
+            }
+
             if (hasErrors){
                 request.getRequestDispatcher("reservationController?command=reservation_page").forward(request, response);
             }
