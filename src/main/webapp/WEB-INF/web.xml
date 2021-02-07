@@ -67,4 +67,30 @@
     <url-pattern>/editUserData</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>AdminCabinet</servlet-name>
+    <jsp-file>/WEB-INF/jsp/adminCabinet.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminCabinet</servlet-name>
+    <url-pattern>/adminCabinet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>RoomAdministration</servlet-name>
+    <jsp-file>/WEB-INF/jsp/roomAdministration.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RoomAdministration</servlet-name>
+    <url-pattern>/roomAdministration</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RoomTypeAdministration</servlet-name>
+    <jsp-file>/WEB-INF/jsp/roomTypeAdministration.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RoomTypeAdministration</servlet-name>
+    <url-pattern>/roomTypeAdministration</url-pattern>
+  </servlet-mapping>
 </web-app>

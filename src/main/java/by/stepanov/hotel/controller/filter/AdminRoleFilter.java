@@ -1,16 +1,18 @@
 package by.stepanov.hotel.controller.filter;
 
+import by.stepanov.hotel.entity.Role;
+import by.stepanov.hotel.entity.User;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(filterName = "AuthorizationFilter",
-        servletNames = "ReservationController",
-        urlPatterns = {"/reservation/*", "/userCabinet/*", "/reservationConfirm/*", "/editUserData/*"})
-
-public class AuthorizationFilter implements Filter {
+@WebFilter(filterName = "AdminRoleFilter",
+        servletNames = "AdminController",
+        urlPatterns = {"/adminCabinet/*", "/roomAdministration/*", "/roomTypeAdministration/*"})
+public class AdminRoleFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -21,7 +23,9 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        if (req.getSession().getAttribute("user") == null){
+        User user = (User)req.getSession().getAttribute("user");
+
+        if (user == null || !Role.ADMIN.equals(user.getRole())){
             resp.sendRedirect("login");
         } else {
             chain.doFilter(request, response);

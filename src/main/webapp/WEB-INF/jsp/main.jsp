@@ -24,6 +24,10 @@
         <a href="userController?command=logout">LogOut</a><br>
 <%--В кабинет узера--%>
         <a href="reservationController?command=user_cabinet_page">To user cabinet</a><br>
+        <%--В кабинет админа--%>
+        <c:if test="${sessionScope.user.role.name().equals('ADMIN')}">
+            <a href="adminController?command=admin_cabinet_page">To admin page</a><br>
+        </c:if>
     </c:if>
 
 

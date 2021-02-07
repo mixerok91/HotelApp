@@ -3,11 +3,11 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>User Cabinet</title>
+    <title>User's Cabinet</title>
 </head>
 <body>
 <div>
-    User Cabinet.
+    User's Cabinet.
 <%--Показать все брони--%>
     <div>
         <form action="reservationController" method="get">

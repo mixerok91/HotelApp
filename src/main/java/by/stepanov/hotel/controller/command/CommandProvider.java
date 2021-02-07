@@ -1,6 +1,7 @@
 package by.stepanov.hotel.controller.command;
 
 import by.stepanov.hotel.controller.command.impl.*;
+import by.stepanov.hotel.controller.command.impl.admincabinet.*;
 import by.stepanov.hotel.controller.command.impl.reservation.*;
 import by.stepanov.hotel.controller.command.impl.usercabinet.EditUserData;
 import by.stepanov.hotel.controller.command.impl.usercabinet.EditUserDataPage;
@@ -37,6 +38,12 @@ public class CommandProvider {
 
         commands.put(ParameterName.RESERVATION_PAYMENT, new ReservationPayment());
         commands.put(ParameterName.RESERVATION_CANCEL, new ReservationCancel());
+
+        commands.put(ParameterName.ADMIN_CABINET_PAGE, new AdminCabinetPage());
+        commands.put(ParameterName.ROOM_TYPE_ADMINISTRATION_PAGE, new RoomTypeAdministrationPage());
+        commands.put(ParameterName.ROOM_ADMINISTRATION_PAGE, new RoomAdministrationPage());
+        commands.put(ParameterName.GET_USER, new GetUser());
+        commands.put(ParameterName.GET_RESERVATIONS_BY_PERIOD, new GetReservationsByPeriod());
     }
 
     public Command getCommand(String commandName){
