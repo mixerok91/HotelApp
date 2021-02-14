@@ -66,6 +66,7 @@ public class Login implements Command {
 
             response.sendRedirect("mainController?command=main_page");
         } catch (ServiceException e) {
+//            TODO logger
             response.sendRedirect("error?errorMessage=Ooops, something went wrong, with logging.");
         }
     }

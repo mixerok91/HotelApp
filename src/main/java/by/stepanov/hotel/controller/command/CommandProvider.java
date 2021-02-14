@@ -42,8 +42,12 @@ public class CommandProvider {
         commands.put(ParameterName.ADMIN_CABINET_PAGE, new AdminCabinetPage());
         commands.put(ParameterName.ROOM_TYPE_ADMINISTRATION_PAGE, new RoomTypeAdministrationPage());
         commands.put(ParameterName.ROOM_ADMINISTRATION_PAGE, new RoomAdministrationPage());
-        commands.put(ParameterName.GET_USER, new GetUser());
         commands.put(ParameterName.GET_RESERVATIONS_BY_PERIOD, new GetReservationsByPeriod());
+        commands.put(ParameterName.CREATE_ROOM_TYPE, new CreateRoomType());
+        commands.put(ParameterName.EDIT_ROOM_TYPE, new EditRoomType());
+        commands.put(ParameterName.CREATE_ROOM, new CreateRoom());
+        commands.put(ParameterName.EDIT_ROOM, new EditRoom());
+        commands.put(ParameterName.GET_USERS_INFORMATION_BY_EMAIL, new GetUsersReservationsByEmail());
     }
 
     public Command getCommand(String commandName){

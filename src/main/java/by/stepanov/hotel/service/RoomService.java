@@ -2,6 +2,7 @@ package by.stepanov.hotel.service;
 
 import by.stepanov.hotel.entity.Room;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface RoomService {
@@ -17,4 +18,6 @@ public interface RoomService {
     List<Room> getAllRooms() throws ServiceException;
 
     List<Room> getFreeRooms(String inDate, String outDate, String roomType) throws ServiceException;
+
+    String saveUploadedFileAndAddPathToRoom(HttpServletRequest request, Room room) throws ServiceException;
 }

@@ -3,7 +3,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-    <title>Edit user data</title>
+    <title>Edit user information</title>
     <style>
         .errorText {
             color: red;

@@ -16,7 +16,7 @@ public class MainController extends HttpServlet {
     private final CommandProvider commandProvider = new CommandProvider();
 
     @Override
-    protected void doPost(final HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp);
     }
 
@@ -26,7 +26,7 @@ public class MainController extends HttpServlet {
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-         String currentCommandName;
+        String currentCommandName;
         Command command;
 
         currentCommandName = request.getParameter("command");

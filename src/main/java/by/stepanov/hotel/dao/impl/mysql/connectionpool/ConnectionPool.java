@@ -24,23 +24,16 @@ public class ConnectionPool {
     }
 
     private ConnectionPool() {
-//        DBResourceManager dbResourceManager = DBResourceManager.getInstance();
-//        driverName = dbResourceManager.getValue(DBParameter.DB_DRIVER);
-//        url = dbResourceManager.getValue(DBParameter.DB_URL);
-//        user = dbResourceManager.getValue(DBParameter.DB_USER);
-//        password = dbResourceManager.getValue(DBParameter.DB_PASSWORD);
-//        try {
-//            poolSize = Integer.parseInt(dbResourceManager.getValue(DBParameter.DB_POOL_SIZE));
-//        } catch (NumberFormatException e){
-//            poolSize = 5;
-//        }
-//        initPoolData();
-
-        driverName = "com.mysql.cj.jdbc.Driver";
-        url = "jdbc:mysql://localhost:3306/hotel_db?useSSL=false&serverTimezone=UTC";
-        user = "root";
-        password = "mysql";
-        poolSize = 10;
+        DBResourceManager dbResourceManager = DBResourceManager.getInstance();
+        driverName = dbResourceManager.getValue(DBParameter.DB_DRIVER);
+        url = dbResourceManager.getValue(DBParameter.DB_URL);
+        user = dbResourceManager.getValue(DBParameter.DB_USER);
+        password = dbResourceManager.getValue(DBParameter.DB_PASSWORD);
+        try {
+            poolSize = Integer.parseInt(dbResourceManager.getValue(DBParameter.DB_POOL_SIZE));
+        } catch (NumberFormatException e){
+            poolSize = 5;
+        }
         initPoolData();
     }
 

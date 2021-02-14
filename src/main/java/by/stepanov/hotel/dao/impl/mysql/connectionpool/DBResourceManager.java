@@ -1,18 +1,31 @@
 package by.stepanov.hotel.dao.impl.mysql.connectionpool;
 
-import java.util.ResourceBundle;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class DBResourceManager {
     private final static DBResourceManager instance = new DBResourceManager();
 
-    //private ResourceBundle bundle = ResourceBundle.getBundle("by.stepanov.hotel.dao.impl.mysql.connectionpool.database");
+    private InputStream inputStream;
+    private Properties properties;
 
+    private DBResourceManager() {
+        inputStream = this.getClass().getClassLoader().getResourceAsStream("database.properties");
+        properties = new Properties();
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+//            TODO Logger
+            throw new ConnectionPoolException(e);
+        }
+    }
 
-    public static DBResourceManager getInstance(){
+    public static DBResourceManager getInstance() {
         return instance;
     }
-//TODO: file with properties
-    public String getValue(String key){
-        return "";
+
+    public String getValue(String key) {
+        return properties.getProperty(key);
     }
 }

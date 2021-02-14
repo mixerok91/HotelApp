@@ -5,16 +5,17 @@
 <head>
     <title>Room reservation page</title>
     <style>
-    .errorText {
-    color: red;
-    font-size: small;
-    }
+        .errorText {
+            color: red;
+            font-size: small;
+        }
     </style>
 </head>
 <body>
 <h1>Reservation page</h1>
+<a href="mainController?command=main_page">To main page</a>
 <div>
-<%-- Форма для поиска свободного номера на нужные даты--%>
+    <%-- Форма для поиска свободного номера на нужные даты--%>
     <form action="reservationController" method="get">
         <input type="hidden" name="command" value="find_suitable_rooms">
         <div class="errorText">${requestScope.dateError}</div>
@@ -33,13 +34,18 @@
         </div>
         <div><input type="submit" value="Search suitable rooms"></div>
     </form>
-<%--Выбор свободного номера для бронирования--%>
+    <%--Выбор свободного номера для бронирования--%>
     <div>
         <c:if test="${requestScope.foundRooms.size() == 0}">
             <div>Sorry, there are no available rooms on this date. Try other dates.</div>
         </c:if>
         <c:forEach items="${requestScope.foundRooms}" var="room">
             <div>${room}</div>
+            <div>
+                <c:if test="${not empty room.picturePath}">
+                    <img src="${room.picturePath}" width="150" height="150">
+                </c:if>
+            </div>
             <div>
                 <form action="reservationController" method="post">
                     <input type="hidden" name="command" value="reservation_confirm_page">
@@ -53,6 +59,6 @@
         </c:forEach>
     </div>
 </div>
-<a href="mainController?command=main_page">To main page</a>
+
 </body>
 </html>

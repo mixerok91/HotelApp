@@ -26,7 +26,7 @@
     <div>
         <form action="reservationController" method="get">
             <input type="hidden" name="command" value="edit_user_data_page">
-            <input type="submit" value="Edit data">
+            <input type="submit" value="Edit user's info">
         </form>
     </div>
 <%--Отображает брони--%>
