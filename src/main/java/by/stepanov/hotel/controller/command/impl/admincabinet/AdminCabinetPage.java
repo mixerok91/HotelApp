@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AdminCabinetPage implements Command {
+
+    private static final String ADMIN_CABINET = "adminCabinet";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        response.sendRedirect("adminCabinet");
+        response.sendRedirect(ADMIN_CABINET);
 
     }
 }

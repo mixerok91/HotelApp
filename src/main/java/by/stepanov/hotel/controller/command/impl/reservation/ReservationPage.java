@@ -13,16 +13,24 @@ import java.io.IOException;
 import java.util.List;
 
 public class ReservationPage implements Command {
+
+    public static final String ROOM_TYPES = "roomTypes";
+    public static final String RESERVATION = "/reservation";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         RoomTypeService roomTypeService = ServiceProvider.getRoomTypeService();
+
         try {
             List<RoomType> roomTypes = roomTypeService.getAllRoomTypes();
-            request.setAttribute("roomTypes", roomTypes);
-            request.getRequestDispatcher("/reservation").forward(request, response);
+            request.setAttribute(ROOM_TYPES, roomTypes);
+            request.getRequestDispatcher(RESERVATION).forward(request, response);
         } catch (ServiceException e) {
+//            TODO Logger
             System.err.println(e);
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

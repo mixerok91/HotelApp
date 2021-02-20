@@ -14,36 +14,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class ReservationConfirmPage implements Command {
+
+    private static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String ROOM_ID = "roomId";
+    public static final String USER = "user";
+    public static final String IN_DATE = "inDate";
+    public static final String OUT_DATE = "outDate";
+    public static final String SELECTED_BILL = "selectedBill";
+    public static final String RESERVATION_CONFIRM = "reservationConfirm";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
+
         RoomService roomService = ServiceProvider.getRoomService();
+        Reservation reservation = new Reservation();
 
         try {
-            Reservation reservation = new Reservation();
-            reservation.setRoom(roomService.readRoom(Long.parseLong(request.getParameter("roomId"))));
-            reservation.setUser((User) request.getSession().getAttribute("user"));
-            reservation.setInDate(LocalDate.parse(request.getParameter("inDate")));
-            reservation.setOutDate(LocalDate.parse(request.getParameter("outDate")));
+            reservation.setRoom(roomService.readRoom(Long.parseLong(request.getParameter(ROOM_ID))));
+            reservation.setUser((User) request.getSession().getAttribute(USER));
+            reservation.setInDate(LocalDate.parse(request.getParameter(IN_DATE)));
+            reservation.setOutDate(LocalDate.parse(request.getParameter(OUT_DATE)));
             reservation.setBookStatus(BookStatus.RESERVED);
 
-            Bill bill = new Bill();
+            Bill bill = new Bill(reservation);
             bill.setPaid(false);
-            long days = reservation.getInDate().until(reservation.getOutDate(), ChronoUnit.DAYS);
-            bill.setTotalAmount(days * reservation.getRoom().getDayCost());
 
-            bill.setReservation(reservation);
+            request.getSession().setAttribute(SELECTED_BILL, bill);
 
-            request.getSession().setAttribute("selectedReservation", reservation);
-            request.getSession().setAttribute("selectedBill", bill);
-
-            response.sendRedirect("reservationConfirm");
+            response.sendRedirect(RESERVATION_CONFIRM);
         } catch (ServiceException e) {
             System.err.println(e);
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

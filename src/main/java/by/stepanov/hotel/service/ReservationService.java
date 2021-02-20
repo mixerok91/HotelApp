@@ -22,4 +22,8 @@ public interface ReservationService {
     List<Reservation> getReservationsByAfterDate(String date) throws ServiceException;
 
     List<Reservation> getReservationsByUser(User user) throws ServiceException;
+
+    List<Reservation> getReservationByPeriod(String fromDate, String untilDate) throws ServiceException;
+
+    List<Reservation> getActualUserReservations(User attribute) throws ServiceException;
 }

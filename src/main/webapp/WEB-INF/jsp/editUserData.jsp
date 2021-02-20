@@ -21,16 +21,16 @@
             <div>${sessionScope.user.email}</div>
             <div>Type old password:</div>
             <div><input type="password" name="oldPassword" required></div>
-            <div class="errorText">${requestScope.oldPasswordError}<br></div>
+            <div class="errorText">${requestScope.errors.get("oldPasswordError")}<br></div>
             <div>Type new password:</div>
             <div><input type="password" name="newPassword" required></div>
-            <div class="errorText">${requestScope.newPasswordValidationError}<br></div>
+            <div class="errorText">${requestScope.errors.get("newPasswordValidationError")}<br></div>
             <div>Type your First Name:</div>
             <div><input type="text" name="firstName" required value="${sessionScope.user.firstName}"></div>
-            <div class="errorText">${requestScope.firsNameError}<br></div>
+            <div class="errorText">${requestScope.errors.get("firsNameError")}<br></div>
             <div>Type your Surname:</div>
             <div><input type="text" name="surName" required value="${sessionScope.user.surName}"></div>
-            <div class="errorText">${requestScope.surNameError}<br></div>
+            <div class="errorText">${requestScope.errors.get("surNameError")}<br></div>
             <div><input type="submit" value="Save user change"></div>
         </form>
     </div>

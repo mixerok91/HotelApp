@@ -201,7 +201,6 @@ public class BillDaoImpl implements BillDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(READ_ALL_BILL_BY_RESERVATION_ID_QUERY);

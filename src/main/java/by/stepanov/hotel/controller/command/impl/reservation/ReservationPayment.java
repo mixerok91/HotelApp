@@ -13,9 +13,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.temporal.ChronoUnit;
 
 public class ReservationPayment implements Command {
+
+    public static final String RESERVATION_ID = "reservationId";
+    public static final String USER_CABINET_PAGE_CONTROLLER = "reservationController?command=user_cabinet_page";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -24,8 +28,7 @@ public class ReservationPayment implements Command {
 
         try {
             Reservation reservation =
-                    reservationService.readReservation(Long.parseLong(request.getParameter("reservationId")));
-
+                    reservationService.readReservation(Long.parseLong(request.getParameter(RESERVATION_ID)));
 
             Bill bill = billService.readBillByReservationId(reservation.getId());
             bill.setPaid(true);
@@ -34,11 +37,11 @@ public class ReservationPayment implements Command {
             reservationService.updateReservation(reservation);
             billService.updateBill(bill);
 
-            response.sendRedirect("reservationController?command=user_cabinet_page");
+            response.sendRedirect(USER_CABINET_PAGE_CONTROLLER);
 //            TODO Logger...
         } catch (ServiceException e) {
             System.err.println(e);
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

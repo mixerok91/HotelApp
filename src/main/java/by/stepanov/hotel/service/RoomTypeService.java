@@ -15,4 +15,6 @@ public interface RoomTypeService {
     void deleteRoomType(long roomTypeId) throws ServiceException;
 
     List<RoomType> getAllRoomTypes() throws ServiceException;
+
+    RoomType readRoomType(String roomType) throws ServiceException;
 }

@@ -12,23 +12,33 @@ import java.io.IOException;
 import java.util.List;
 
 public class RoomAdministrationPage implements Command {
+
+    public static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String ROOMS = "rooms";
+    public static final String MESSAGE = "message";
+    public static final String ROOM_ADMINISTRATION = "roomAdministration";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
+            if (request.getSession()==null){
+                response.sendRedirect(LOGIN_PAGE);
+            }
+
             List<Room> roomList = ServiceProvider.getRoomService().getAllRooms();
+            request.getSession().setAttribute(ROOMS, roomList);
 
-            request.getSession().setAttribute("rooms", roomList);
-
-            if (request.getAttribute("message") != null){
-                String message = (String) request.getAttribute("message");
+            if (request.getAttribute(MESSAGE) != null){
+                String message = (String) request.getAttribute(MESSAGE);
                 response.sendRedirect("roomAdministration?message=" + message);
             } else {
-                response.sendRedirect("roomAdministration");
+                response.sendRedirect(ROOM_ADMINISTRATION);
             }
         } catch (ServiceException e) {
             System.err.println(e);
 //            TODO logger
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong, try later");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

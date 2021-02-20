@@ -13,6 +13,10 @@ import java.io.IOException;
         servletNames = "AdminController",
         urlPatterns = {"/adminCabinet/*", "/roomAdministration/*", "/roomTypeAdministration/*"})
 public class AdminRoleFilter implements Filter {
+
+    public static final String USER = "user";
+    public static final String LOGIN = "login";
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -23,10 +27,10 @@ public class AdminRoleFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        User user = (User)req.getSession().getAttribute("user");
+        User user = (User)req.getSession().getAttribute(USER);
 
         if (user == null || !Role.ADMIN.equals(user.getRole())){
-            resp.sendRedirect("login");
+            resp.sendRedirect(LOGIN);
         } else {
             chain.doFilter(request, response);
         }

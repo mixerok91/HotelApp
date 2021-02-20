@@ -12,65 +12,48 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class Registration implements Command {
+
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
+    public static final String FIRST_NAME = "firstName";
+    public static final String SUR_NAME = "surName";
+    public static final String USER = "user";
+    public static final String ERRORS = "errors";
+    public static final String REGISTRATION = "/registration";
+    public static final String LOGIN_PAGE_CONTROLLER = "userController?command=login_page";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String emailError;
-        String passwordError;
-        String firsNameError;
-        String surNameError;
-
-        boolean hasErrors = false;
-
-        UserService userService = ServiceProvider.getInstance().getUserService();
+        UserService userService = ServiceProvider.getUserService();
+        UserParamsValidator userParamsValidator = new UserParamsValidator();
 
         try {
             User user = new User();
-            user.setEmail(request.getParameter("email"));
-            user.setPassword(request.getParameter("password"));
-            user.setFirstName(request.getParameter("firstName"));
-            user.setSurName(request.getParameter("surName"));
+            user.setEmail(request.getParameter(EMAIL));
+            user.setPassword(request.getParameter(PASSWORD));
+            user.setFirstName(request.getParameter(FIRST_NAME));
+            user.setSurName(request.getParameter(SUR_NAME));
             user.setRole(Role.USER);
 
-            request.setAttribute("user", user);
+            request.setAttribute(USER, user);
 
-            if (!UserParamsValidator.emailValid(user.getEmail())){
-                emailError = "Email is not valid";
-                request.setAttribute("emailError", emailError);
-                hasErrors = true;
-            }
-            if (userService.readUser(user.getEmail()) != null){
-                emailError = "User with that email already exist";
-                request.setAttribute("emailError", emailError);
-                hasErrors = true;
-            }
-            if (!UserParamsValidator.passwordValid(user.getPassword())){
-                passwordError = "Password is not valid";
-                request.setAttribute("passwordError", passwordError);
-                hasErrors = true;
-            }
-            if (!UserParamsValidator.nameValid(user.getFirstName())){
-                firsNameError = "First name is not valid";
-                request.setAttribute("firsNameError", firsNameError);
-                hasErrors = true;
-            }
-            if (!UserParamsValidator.nameValid(user.getSurName())){
-                surNameError = "Surname is not valid";
-                request.setAttribute("surNameError", surNameError);
-                hasErrors = true;
-            }
+            Map<String, String> errors = userParamsValidator.validateParamsForRegistration(user);
 
-            if (hasErrors){
-                request.getRequestDispatcher("/registration").forward(request,response);
+            if (!errors.isEmpty()){
+                request.setAttribute(ERRORS, errors);
+                request.getRequestDispatcher(REGISTRATION).forward(request,response);
             } else {
-                ServiceProvider.getInstance().getUserService().createUser(user);
-                response.sendRedirect("userController?command=login_page");
+                userService.createUser(user);
+                response.sendRedirect(LOGIN_PAGE_CONTROLLER);
             }
 
         } catch (ServiceException e) {
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong, with registration.");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

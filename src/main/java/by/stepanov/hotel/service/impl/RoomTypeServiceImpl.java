@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class RoomTypeServiceImpl implements RoomTypeService {
-
+//TODO Logger in every methods
     private RoomTypeDao roomTypeDao = DaoProvider.getInstance().getRoomTypeDao();
 
     @Override
@@ -63,5 +63,19 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             System.err.println(e);
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public RoomType readRoomType(String roomTypeName) throws ServiceException {
+        RoomType roomType = null;
+        try {
+            roomType = roomTypeDao.getAllRoomTypes().stream()
+                    .filter(roomType1 -> roomType1.getTypeName().equals(roomTypeName))
+                    .findFirst().get();
+        } catch (DAOException e) {
+//            TODO Logger
+            throw new ServiceException(e);
+        }
+        return roomType;
     }
 }

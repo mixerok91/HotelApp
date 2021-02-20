@@ -1,7 +1,6 @@
 package by.stepanov.hotel.controller.command.impl.usercabinet;
 
 import by.stepanov.hotel.controller.command.Command;
-import by.stepanov.hotel.entity.BookStatus;
 import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.entity.User;
 import by.stepanov.hotel.service.ReservationService;
@@ -13,29 +12,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 public class UserCabinetPage implements Command {
+
+    private static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String USER = "user";
+    public static final String USER_RESERVATIONS = "userReservations";
+    public static final String USER_CABINET = "userCabinet";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong.";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
+
         ReservationService reservationService = ServiceProvider.getReservationService();
         HttpSession session = request.getSession();
 
         try {
-            List<Reservation> userReservations =
-                    reservationService.getReservationsByUser((User) session.getAttribute("user"));
+            List<Reservation> actualUserReservations = reservationService.getActualUserReservations((User) session.getAttribute(USER));
 
-            userReservations.removeIf(reservation -> reservation.getBookStatus().equals(BookStatus.CANCELLED)
-                    ||reservation.getBookStatus().equals(BookStatus.FINISHED)
-                    ||reservation.getInDate().isBefore(LocalDate.now()));
+            session.setAttribute(USER_RESERVATIONS, actualUserReservations);
 
-            session.setAttribute("userReservations", userReservations);
-
-            response.sendRedirect("userCabinet");
+            response.sendRedirect(USER_CABINET);
         } catch (ServiceException e) {
             System.err.println(e);
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong.");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

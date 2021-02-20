@@ -12,72 +12,53 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class EditUserData implements Command {
+
+    private static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String USER = "user";
+    public static final String OLD_PASSWORD = "oldPassword";
+    public static final String NEW_PASSWORD = "newPassword";
+    public static final String FIRST_NAME = "firstName";
+    public static final String SUR_NAME = "surName";
+    public static final String ERRORS = "errors";
+    public static final String EDIT_USER_DATA = "/editUserData";
+    public static final String USER_CABINET_PAGE_CONTROLLER = "reservationController?command=user_cabinet_page";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String passwordError;
-        String firsNameError;
-        String surNameError;
 
-        boolean hasErrors = false;
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
 
+        UserParamsValidator userParamsValidator = new UserParamsValidator();
         UserService userService = ServiceProvider.getInstance().getUserService();
 
         try {
-            User currentUser = (User) request.getSession().getAttribute("user");
-            String oldPassword = request.getParameter("oldPassword");
-            String newPassword = request.getParameter("newPassword");
-            String firstName = request.getParameter("firstName");
-            String surName = request.getParameter("surName");
+            User currentUser = (User) request.getSession().getAttribute(USER);
+            String oldPassword = request.getParameter(OLD_PASSWORD);
+            String newPassword = request.getParameter(NEW_PASSWORD);
+            String firstName = request.getParameter(FIRST_NAME);
+            String surName = request.getParameter(SUR_NAME);
 
-            if (oldPassword!=null) {
-                if (!BCrypt.checkpw(oldPassword, currentUser.getPassword())) {
-                    passwordError = "Old password incorrect";
-                    request.setAttribute("oldPasswordError", passwordError);
-                    hasErrors = true;
-                }
-            }
-            if (newPassword!=null) {
-                if (!UserParamsValidator.passwordValid(newPassword)) {
-                    passwordError = "New password is not valid";
-                    request.setAttribute("newPasswordValidationError", passwordError);
-                    hasErrors = true;
-                }
-                if (BCrypt.checkpw(newPassword, currentUser.getPassword())) {
-                    passwordError = "The new password must be different from the old one";
-                    request.setAttribute("newPasswordValidationError", passwordError);
-                    hasErrors = true;
-                }
-            }
-            if (firstName!=null) {
-                if (!UserParamsValidator.nameValid(firstName)) {
-                    firsNameError = "New first name is not valid";
-                    request.setAttribute("firsNameError", firsNameError);
-                    hasErrors = true;
-                }
-            }
-            if (surName!=null) {
-                if (!UserParamsValidator.nameValid(surName)) {
-                    surNameError = "New surname is not valid";
-                    request.setAttribute("surNameError", surNameError);
-                    hasErrors = true;
-                }
-            }
+            Map<String, String> errors = userParamsValidator.validateParamsForUserEditing(currentUser, oldPassword, newPassword, firstName, surName);
 
-            if (hasErrors) {
-                request.getRequestDispatcher("/editUserData").forward(request, response);
+            if (!errors.isEmpty()){
+                request.setAttribute(ERRORS, errors);
+                request.getRequestDispatcher(EDIT_USER_DATA).forward(request, response);
             } else {
-                currentUser.setPassword(BCrypt.hashpw(newPassword,BCrypt.gensalt(12)));
+                currentUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
                 currentUser.setFirstName(firstName);
                 currentUser.setSurName(surName);
-                ServiceProvider.getInstance().getUserService().updateUser(currentUser);
-                request.getSession().setAttribute("user", currentUser);
-                response.sendRedirect("reservationController?command=user_cabinet_page");
+                userService.updateUser(currentUser);
+                request.getSession().setAttribute(USER, currentUser);
+                response.sendRedirect(USER_CABINET_PAGE_CONTROLLER);
             }
-
         } catch (ServiceException e) {
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong, with registration.");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

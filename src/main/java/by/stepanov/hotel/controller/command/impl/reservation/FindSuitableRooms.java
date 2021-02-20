@@ -5,53 +5,49 @@ import by.stepanov.hotel.entity.Room;
 import by.stepanov.hotel.service.RoomService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
+import by.stepanov.hotel.service.impl.validator.SuitableDateValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 public class FindSuitableRooms implements Command {
+
+    public static final String IN_DATE = "inDate";
+    public static final String OUT_DATE = "outDate";
+    public static final String ROOM_TYPE = "roomType";
+    public static final String DATE_ERROR = "dateError";
+    public static final String RESERVATION_PAGE_CONTROLLER = "reservationController?command=reservation_page";
+    public static final String FOUND_ROOMS = "foundRooms";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String inDate = request.getParameter("inDate");
-        String outDate = request.getParameter("outDate");
-        String roomType = request.getParameter("roomType");
-        boolean hasErrors = false;
-
-        request.setAttribute("inDate", inDate);
-        request.setAttribute("outDate", outDate);
 
         RoomService roomService = ServiceProvider.getRoomService();
 
-        List<Room> freeRooms = null;
+        String inDate = request.getParameter(IN_DATE);
+        String outDate = request.getParameter(OUT_DATE);
+        String roomType = request.getParameter(ROOM_TYPE);
+
+        request.setAttribute(IN_DATE, inDate);
+        request.setAttribute(OUT_DATE, outDate);
 
         try {
-            if (LocalDate.parse(inDate).isAfter(LocalDate.parse(outDate))){
-                request.setAttribute("dateError","Out date must be after in date");
-                hasErrors = true;
-            }
-            if (LocalDate.parse(inDate).isBefore(LocalDate.now()) || LocalDate.parse(outDate).isBefore(LocalDate.now())){
-                request.setAttribute("dateError", "Date must be not before today");
-                hasErrors = true;
-            }
-            if (LocalDate.parse(inDate).isEqual(LocalDate.parse(outDate))){
-                request.setAttribute("dataError", "In date and out date must not be equals");
-                hasErrors = true;
+            if (SuitableDateValidator.checkDates(inDate, outDate) != null){
+                request.setAttribute(DATE_ERROR, SuitableDateValidator.checkDates(inDate, outDate));
+                request.getRequestDispatcher(RESERVATION_PAGE_CONTROLLER).forward(request, response);
             }
 
-            if (hasErrors){
-                request.getRequestDispatcher("reservationController?command=reservation_page").forward(request, response);
-            }
+            List<Room> freeRooms = roomService.getFreeRooms(inDate, outDate, roomType);
 
-            freeRooms = roomService.getFreeRooms(inDate, outDate, roomType);
-            request.setAttribute("foundRooms", freeRooms);
-            request.getRequestDispatcher("reservationController?command=reservation_page").forward(request, response);
+            request.setAttribute(FOUND_ROOMS, freeRooms);
+            request.getRequestDispatcher(RESERVATION_PAGE_CONTROLLER).forward(request, response);
         } catch (ServiceException e) {
             System.err.println(e);
-            response.sendRedirect("error?errorMessage=Ooops, something went wrong, try later");
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 }

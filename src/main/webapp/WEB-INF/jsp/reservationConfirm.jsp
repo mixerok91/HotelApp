@@ -7,7 +7,7 @@
 </head>
 <body>
     Reservation confirm
-    <h4>${sessionScope.selectedReservation}</h4><br>
+    <h4>${sessionScope.selectedBill.reservation}</h4><br>
     <h2>Total amount: ${sessionScope.selectedBill.totalAmount}</h2>
     <form action="reservationController" name="post">
         <input type="hidden" name="command" value="reservation_confirm">

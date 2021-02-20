@@ -4,6 +4,7 @@ import by.stepanov.hotel.dao.BillDao;
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.DaoProvider;
 import by.stepanov.hotel.entity.Bill;
+import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.service.BillService;
 import by.stepanov.hotel.service.ServiceException;
 
@@ -70,6 +71,15 @@ public class BillServiceImpl implements BillService {
         } catch (DAOException e) {
             System.err.println(e);
             throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void setBillToReservations(List<Reservation> reservations) throws ServiceException {
+        if (!reservations.isEmpty()) {
+            for (Reservation reservation : reservations) {
+                reservation.setBill(readBillByReservationId(reservation.getId()));
+            }
         }
     }
 }

@@ -108,6 +108,13 @@
                 <span>${reservation.user.email}</span><br>
                 <span>Reservation book status:</span><br>
                 <span>${reservation.bookStatus}</span><br>
+                <c:if test="${not empty reservation.bill}">
+                    Reservation's bill:<br>
+                    <span>Total amount:</span><br>
+                    <span>${reservation.bill.totalAmount}</span><br>
+                    <span>Is paid:</span><br>
+                    <span>${reservation.bill.paid}</span><br>
+                </c:if>
                 <h3>-----------------------------------------------</h3>
             </div>
         </c:forEach>

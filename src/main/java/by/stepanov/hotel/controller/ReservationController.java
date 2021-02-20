@@ -13,6 +13,7 @@ import java.io.IOException;
 @WebServlet(name = "ReservationController", urlPatterns = "/reservationController")
 public class ReservationController extends HttpServlet {
 
+    public static final String COMMAND = "command";
     private final CommandProvider commandProvider = new CommandProvider();
 
     @Override
@@ -29,7 +30,7 @@ public class ReservationController extends HttpServlet {
         String currentCommandName;
         Command command;
 
-        currentCommandName = request.getParameter("command");
+        currentCommandName = request.getParameter(COMMAND);
         command = commandProvider.getCommand(currentCommandName);
         command.execute(request, response);
     }

@@ -8,11 +8,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class Logout implements Command {
+
+    public static final String USER = "user";
+    public static final String MAIN_PAGE_CONTROLLER = "mainController?command=main_page";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if (request.getSession().getAttribute("user") != null) {
-            request.getSession().removeAttribute("user");
+        if (request.getSession().getAttribute(USER) != null) {
+            request.getSession().removeAttribute(USER);
         }
-        response.sendRedirect("mainController?command=main_page");
+        response.sendRedirect(MAIN_PAGE_CONTROLLER);
     }
 }

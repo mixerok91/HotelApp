@@ -13,7 +13,7 @@
 <div>
     ${param.get("message")}
 </div>
-
+<%--Create new room--%>
 <div>
     <div>
         <span>Create new room:</span>
@@ -37,6 +37,7 @@
             <input type="submit" value="Create new room">
         </form>
     </div>
+<%--    Edit exist rooms--%>
     <div>
         Edit rooms:<br>
         <c:forEach var="room" items="${sessionScope.rooms}">

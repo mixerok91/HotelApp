@@ -1,5 +1,7 @@
 package by.stepanov.hotel.entity;
 
+import java.time.temporal.ChronoUnit;
+
 public class Bill {
     private Long id;
     private double totalAmount;
@@ -17,6 +19,12 @@ public class Bill {
         this.totalAmount = totalAmount;
         this.isPaid = isPaid;
         this.reservation = reservation;
+    }
+
+    public Bill(Reservation reservation){
+        this.reservation = reservation;
+        long days = reservation.getInDate().until(reservation.getOutDate(), ChronoUnit.DAYS);
+        this.totalAmount = (days * reservation.getRoom().getDayCost());
     }
 
     public Long getId() {

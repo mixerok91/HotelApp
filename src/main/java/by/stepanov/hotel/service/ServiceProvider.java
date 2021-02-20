@@ -18,7 +18,7 @@ public class ServiceProvider {
         return instance;
     }
 
-    public UserService getUserService(){
+    public static UserService getUserService(){
         return userService;
     }
 

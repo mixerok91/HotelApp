@@ -14,6 +14,7 @@ import java.io.IOException;
 @WebServlet(name = "AdminController", urlPatterns = "/adminController")
 @MultipartConfig
 public class AdminController extends HttpServlet {
+    public static final String COMMAND = "command";
     private final CommandProvider commandProvider = new CommandProvider();
 
     @Override
@@ -30,7 +31,7 @@ public class AdminController extends HttpServlet {
         String currentCommandName;
         Command command;
 
-        currentCommandName = request.getParameter("command");
+        currentCommandName = request.getParameter(COMMAND);
         command = commandProvider.getCommand(currentCommandName);
         command.execute(request, response);
     }

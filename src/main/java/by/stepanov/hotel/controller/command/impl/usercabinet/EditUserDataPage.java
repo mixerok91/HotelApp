@@ -8,9 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class EditUserDataPage implements Command {
+
+    public static final String EDIT_USER_DATA = "editUserData";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        response.sendRedirect("editUserData");
+        response.sendRedirect(EDIT_USER_DATA);
     }
 }

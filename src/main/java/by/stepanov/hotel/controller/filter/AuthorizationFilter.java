@@ -11,6 +11,10 @@ import java.io.IOException;
         urlPatterns = {"/reservation/*", "/userCabinet/*", "/reservationConfirm/*", "/editUserData/*"})
 
 public class AuthorizationFilter implements Filter {
+
+    public static final String USER = "user";
+    public static final String LOGIN = "login";
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -21,8 +25,8 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        if (req.getSession().getAttribute("user") == null){
-            resp.sendRedirect("login");
+        if (req.getSession().getAttribute(USER) == null){
+            resp.sendRedirect(LOGIN);
         } else {
             chain.doFilter(request, response);
         }

@@ -22,6 +22,7 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     private final static String SAVE_IMAGE_DIRECTORY = "images\\rooms";
+    public static final String ANY_TYPE = "Any type";
 
     private RoomDao roomDao = DaoProvider.getInstance().getRoomDao();
     private ReservationService reservationService = ServiceProvider.getReservationService();
@@ -85,7 +86,7 @@ public class RoomServiceImpl implements RoomService {
         List<Reservation> reservations = reservationService.getReservationsByAfterDate(String.valueOf(LocalDate.now()));
         List<Room> rooms = getAllRooms();
 
-        if (!"Any type".equals(roomType)) {
+        if (!ANY_TYPE.equals(roomType)) {
             rooms.removeIf(room -> !roomType.equals(room.getRoomType().getTypeName()));
         }
 

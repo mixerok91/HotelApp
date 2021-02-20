@@ -9,8 +9,10 @@ import java.io.IOException;
 
 public class LoginPage implements Command {
 
+    public static final String LOGIN = "login";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.sendRedirect("login");
+        response.sendRedirect(LOGIN);
     }
 }
