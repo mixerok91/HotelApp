@@ -4,6 +4,7 @@ import by.stepanov.hotel.entity.User;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.UserService;
+import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashMap;
@@ -30,7 +31,10 @@ public class UserParamsValidator {
     public static final String FIRST_NAME_IS_NOT_VALID = "First name is not valid";
     public static final String SURNAME_IS_NOT_VALID = "Surname is not valid";
 
+    private static final Logger log = Logger.getLogger(UserParamsValidator.class);
+
     private boolean emailValid(String email){
+        log.info("Email validation");
         if (email.matches("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$")) {
             return true;
         }
@@ -39,6 +43,7 @@ public class UserParamsValidator {
 
     private boolean passwordValid(String password){
         //latin and russian letters and digits more than 4 symbols
+        log.info("Password validation");
         if (password.matches("^[a-zA-Zа-яА-Я0-9]{4,}$")) {
             return true;
         }
@@ -47,6 +52,7 @@ public class UserParamsValidator {
 
     private boolean nameValid(String password){
         //latin and russian letters and digits more than 2 symbols
+        log.info("Name validation");
         if (password.matches("^[a-zA-Zа-яА-Я]{2,}$")) {
             return true;
         }
@@ -58,6 +64,8 @@ public class UserParamsValidator {
                                                                     String newPassword,
                                                                     String firstName,
                                                                     String surName){
+        log.info("User's params validation for editing");
+
         Map<String, String> errors = new HashMap<>();
         if (oldPassword != null) {
             if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
@@ -87,6 +95,8 @@ public class UserParamsValidator {
     }
 
     public Map<String, String> validateParamsForLogin (String email, String password) throws ServiceException {
+
+        log.info("User's params validation for logging");
 
         UserService userService = ServiceProvider.getUserService();
 
@@ -118,6 +128,8 @@ public class UserParamsValidator {
     }
 
     public Map<String, String> validateParamsForRegistration (User user) throws ServiceException {
+
+        log.info("User's params validation for registration");
 
         Map<String, String> errors = new HashMap<>();
         UserService userService = ServiceProvider.getUserService();

@@ -7,10 +7,13 @@ import by.stepanov.hotel.entity.Bill;
 import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.service.BillService;
 import by.stepanov.hotel.service.ServiceException;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class BillServiceImpl implements BillService {
+
+    private static final Logger log = Logger.getLogger(BillServiceImpl.class);
 
     private BillDao billDao = DaoProvider.getInstance().getBillDao();
 
@@ -18,8 +21,9 @@ public class BillServiceImpl implements BillService {
     public void createBill(Bill bill) throws ServiceException {
         try {
             billDao.createBill(bill);
+            log.info("Bill with id: '" + bill.getId() + "' created");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -27,9 +31,10 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill readBill(long billId) throws ServiceException {
         try {
+            log.info("Bill with id: '" + billId + "' read");
             return billDao.readBill(billId);
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -38,8 +43,9 @@ public class BillServiceImpl implements BillService {
     public void updateBill(Bill bill) throws ServiceException {
         try {
             billDao.updateBill(bill);
+            log.info("Bill with id: '" + bill.getId() + "' updated");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -48,8 +54,9 @@ public class BillServiceImpl implements BillService {
     public void deleteBill(long billId) throws ServiceException {
         try {
             billDao.deleteBill(billId);
+            log.info("Bill with id: '" + billId + "' deleted");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -57,9 +64,10 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> getAllBills() throws ServiceException {
         try {
+            log.info("All bills read");
             return billDao.getAllBills();
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -67,9 +75,10 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill readBillByReservationId(Long reservationId) throws ServiceException {
         try {
+            log.info("Bill by reservation id: '" + reservationId +"' read");
             return billDao.readBillByReservationId(reservationId);
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -79,6 +88,7 @@ public class BillServiceImpl implements BillService {
         if (!reservations.isEmpty()) {
             for (Reservation reservation : reservations) {
                 reservation.setBill(readBillByReservationId(reservation.getId()));
+                log.info("Bill set to reservation with id: '" + reservation.getId()+"'");
             }
         }
     }

@@ -5,6 +5,7 @@ import by.stepanov.hotel.dao.ReservationDao;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
 import by.stepanov.hotel.entity.*;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -66,6 +67,8 @@ public class ReservationDaoImpl implements ReservationDao {
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
+    private static final Logger log = Logger.getLogger(ReservationDaoImpl.class);
+
     @Override
     public Reservation createReservation(Reservation reservation) throws DAOException {
 
@@ -97,12 +100,15 @@ public class ReservationDaoImpl implements ReservationDao {
             }
 
             reservation.setId(lastId);
+
+            log.info("Reservation: '" + reservation + "' created");
+
             return reservation;
-//            TODO: add logger
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -127,11 +133,15 @@ public class ReservationDaoImpl implements ReservationDao {
             while (resultSet.next()){
                 reservation = readReservationResultSet(resultSet);
             }
+
+            log.info("Reservation: '" + reservation + "' read");
+
             return reservation;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -158,10 +168,13 @@ public class ReservationDaoImpl implements ReservationDao {
             preparedStatement.setLong(8, reservation.getId());
 
             preparedStatement.execute();
+
+            log.info("Reservation: '" + reservation + "' updated");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -182,10 +195,13 @@ public class ReservationDaoImpl implements ReservationDao {
             preparedStatement.execute();
 
             connection.commit();
+
+            log.info("Reservation with id: '" + reservationId + "' deleted");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -210,11 +226,15 @@ public class ReservationDaoImpl implements ReservationDao {
                 Reservation reservation = readReservationResultSet(resultSet);
                 reservations.add(reservation);
             }
+
+            log.info("All reservations read");
+
             return reservations;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -240,11 +260,15 @@ public class ReservationDaoImpl implements ReservationDao {
                 Reservation reservation = readReservationResultSet(resultSet);
                 reservations.add(reservation);
             }
+
+            log.info("All reservations after date: '" + date + "' read");
+
             return reservations;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -270,11 +294,15 @@ public class ReservationDaoImpl implements ReservationDao {
                 Reservation reservation = readReservationResultSet(resultSet);
                 reservations.add(reservation);
             }
+
+            log.info("All '" + user.getEmail() +"'s' reservations read");
+
             return reservations;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

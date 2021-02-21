@@ -1,6 +1,7 @@
 package by.stepanov.hotel.service.schedule;
 
 import by.stepanov.hotel.service.ServiceException;
+import org.apache.log4j.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
@@ -10,6 +11,8 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 public class ScheduleRegister {
+
+    private static final Logger log = Logger.getLogger(ScheduleRegister.class);
 
     public void execute() throws ServiceException {
         try {
@@ -25,9 +28,9 @@ public class ScheduleRegister {
                             .build());
 
             scheduler.start();
-
+            log.info("Schedule start");
         } catch (SchedulerException e) {
-//        TODO Logger
+            log.error("Service exception", e);
             throw new ServiceException(e);
         }
     }

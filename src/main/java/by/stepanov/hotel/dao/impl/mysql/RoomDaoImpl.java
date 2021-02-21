@@ -6,6 +6,7 @@ import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
 import by.stepanov.hotel.entity.Room;
 import by.stepanov.hotel.entity.RoomType;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +34,8 @@ public class RoomDaoImpl implements RoomDao {
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
+    private static final Logger log = Logger.getLogger(RoomDaoImpl.class);
+
     @Override
     public void createRoom(Room room) throws DAOException {
 
@@ -50,11 +53,13 @@ public class RoomDaoImpl implements RoomDao {
             preparedStatement.setString(5, room.getPicturePath());
 
             preparedStatement.executeUpdate();
-//            TODO: add logger
+
+            log.info("Room: '" + room + "' created");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -63,6 +68,7 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public Room readRoom(long roomId) throws DAOException {
+
         Room room = null;
 
         Connection connection = null;
@@ -78,11 +84,15 @@ public class RoomDaoImpl implements RoomDao {
             while (resultSet.next()){
                 room = readRoomResultSet(resultSet);
             }
+
+            log.info("Room: '" + room + "' read");
+
             return room;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -107,10 +117,13 @@ public class RoomDaoImpl implements RoomDao {
             preparedStatement.setLong(6, room.getId());
 
             preparedStatement.execute();
+
+            log.info("Room: '" + room + "' updated");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -129,10 +142,13 @@ public class RoomDaoImpl implements RoomDao {
 
             preparedStatement.setLong(1, roomId);
             preparedStatement.execute();
+
+            log.info("Room with id: '" + roomId + "' deleted");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -141,6 +157,7 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public List<Room> getAllRooms() throws DAOException {
+
         List<Room> roomTypes = new ArrayList<>();
 
         Connection connection = null;
@@ -156,11 +173,15 @@ public class RoomDaoImpl implements RoomDao {
                 Room room = readRoomResultSet(resultSet);
                 roomTypes.add(room);
             }
+
+            log.info("All room read");
+
             return roomTypes;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

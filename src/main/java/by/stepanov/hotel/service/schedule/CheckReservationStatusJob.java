@@ -5,6 +5,8 @@ import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.service.ReservationService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
+import by.stepanov.hotel.service.impl.validator.RoomTypeValidator;
+import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,6 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CheckReservationStatusJob implements Job {
+
+    private static final Logger log = Logger.getLogger(CheckReservationStatusJob.class);
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
@@ -28,14 +33,14 @@ public class CheckReservationStatusJob implements Job {
                     .collect(Collectors.toList());
             reservations.forEach(reservation -> reservation.setBookStatus(BookStatus.CANCELLED));
 
-//        TODO Logger
             for (Reservation reservation : reservations) {
                 reservationService.updateReservation(reservation);
             }
 
+            log.info("Cancelled reservations by server");
         } catch (ServiceException e) {
-//        TODO Logger
-            e.printStackTrace();
+            log.error("Service exception", e);
+            throw new JobExecutionException(e);
         }
     }
 }

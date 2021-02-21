@@ -6,6 +6,7 @@ import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
 import by.stepanov.hotel.entity.Role;
 import by.stepanov.hotel.entity.User;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -20,10 +21,11 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_USER_QUERY = "UPDATE users SET email=?, password=?, firstname=?, surname=?, role=?, " +
             "creation_date=?, last_in_date=? WHERE (users.id=?)";
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=?";
-//    TODO: Adding queries for deleting all data, depended from user
     private static final String READ_ALL_USERS_QUERY = "SELECT * FROM users ORDER BY id";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+    private static final Logger log = Logger.getLogger(UserDaoImpl.class);
 
     @Override
     public void createUser(User user) throws DAOException {
@@ -41,11 +43,13 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(5, user.getRole().name());
             preparedStatement.setString(6, String.valueOf(user.getCreationDate()));
             preparedStatement.executeUpdate();
-//            TODO: add logger
+
+            log.info("User '" + user + "' created");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -69,11 +73,13 @@ public class UserDaoImpl implements UserDao {
             while (resultSet.next()){
                 user = readUserFromResultSet(resultSet);
             }
+            log.info("User '" + user + "' read");
             return user;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -96,11 +102,13 @@ public class UserDaoImpl implements UserDao {
             while (resultSet.next()){
                 user = readUserFromResultSet(resultSet);
             }
+            log.info("User '" + email + "' read");
             return user;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -127,10 +135,12 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setLong(8, user.getId());
 
             preparedStatement.execute();
+            log.info("User '" + user + "' updated");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -148,10 +158,13 @@ public class UserDaoImpl implements UserDao {
 
             preparedStatement.setLong(1, userId);
             preparedStatement.execute();
+
+            log.info("User with id: '" + userId + "' deleted");
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -160,6 +173,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() throws DAOException {
+
         List<User> users = new ArrayList<>();
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -174,11 +188,13 @@ public class UserDaoImpl implements UserDao {
                 User user = readUserFromResultSet(resultSet);
                 users.add(user);
             }
+            log.info("Read all users");
             return users;
         } catch (SQLException e){
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e){
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);

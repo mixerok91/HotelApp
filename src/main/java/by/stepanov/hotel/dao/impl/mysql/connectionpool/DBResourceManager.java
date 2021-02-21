@@ -1,10 +1,15 @@
 package by.stepanov.hotel.dao.impl.mysql.connectionpool;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class DBResourceManager {
+
+    private static final Logger log = Logger.getLogger(DBResourceManager.class);
+
     private final static DBResourceManager instance = new DBResourceManager();
 
     private InputStream inputStream;
@@ -16,7 +21,7 @@ public class DBResourceManager {
         try {
             properties.load(inputStream);
         } catch (IOException e) {
-//            TODO Logger
+            log.error("IOException",e);
             throw new ConnectionPoolException(e);
         }
     }

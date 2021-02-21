@@ -1,5 +1,7 @@
 package by.stepanov.hotel.dao.impl.mysql.connectionpool;
 
+import org.apache.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -8,7 +10,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public class ConnectionPool {
+
+    private static final Logger log = Logger.getLogger(ConnectionPool.class);
+
     private static final ConnectionPool instance = new ConnectionPool();
+    public static final String MESSAGE_CANT_FIND_DRIVER = "Can't find database driver class";
+    public static final String MESSAGE_SQL_EXCEPTION = "SQLException in Connecting pool";
 
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
@@ -49,9 +56,11 @@ public class ConnectionPool {
                 connectionQueue.add(pooledConnection);
             }
         } catch (ClassNotFoundException e) {
-            throw new ConnectionPoolException("Can't find database driver class", e);
+            log.error("Cant find driver exception",e);
+            throw new ConnectionPoolException(MESSAGE_CANT_FIND_DRIVER, e);
         } catch (SQLException e) {
-            throw new ConnectionPoolException("SQLException in Connecting pool", e);
+            log.error("SQL exception",e);
+            throw new ConnectionPoolException(MESSAGE_SQL_EXCEPTION, e);
         }
     }
 

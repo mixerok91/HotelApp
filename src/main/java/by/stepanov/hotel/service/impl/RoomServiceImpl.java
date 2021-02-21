@@ -10,6 +10,7 @@ import by.stepanov.hotel.service.ReservationService;
 import by.stepanov.hotel.service.RoomService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ public class RoomServiceImpl implements RoomService {
     private final static String SAVE_IMAGE_DIRECTORY = "images\\rooms";
     public static final String ANY_TYPE = "Any type";
 
+    private static final Logger log = Logger.getLogger(RoomServiceImpl.class);
+
     private RoomDao roomDao = DaoProvider.getInstance().getRoomDao();
     private ReservationService reservationService = ServiceProvider.getReservationService();
 
@@ -31,8 +34,9 @@ public class RoomServiceImpl implements RoomService {
     public void createRoom(Room room) throws ServiceException {
         try {
             roomDao.createRoom(room);
+            log.info("Room with number: '" + room.getRoomNumber() + "' created");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -40,9 +44,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room readRoom(long roomId) throws ServiceException {
         try {
+            log.info("Room with id: '" + roomId + "' read");
             return roomDao.readRoom(roomId);
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -51,8 +56,9 @@ public class RoomServiceImpl implements RoomService {
     public void updateRoom(Room room) throws ServiceException {
         try {
             roomDao.updateRoom(room);
+            log.info("Room with id: '" + room.getId() + "' updated");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -61,8 +67,9 @@ public class RoomServiceImpl implements RoomService {
     public void deleteRoom(long roomId) throws ServiceException {
         try {
             roomDao.deleteRoom(roomId);
+            log.info("Room with id: '" + roomId + "' deleted");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -70,9 +77,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Room> getAllRooms() throws ServiceException {
         try {
+            log.info("All rooms read");
             return roomDao.getAllRooms();
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -112,6 +120,8 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
+        log.info("Get free rooms with room type '" + roomType + "' and from '" + inDate + "' to '" + outDate + "'");
+
         return rooms;
     }
 
@@ -137,15 +147,18 @@ public class RoomServiceImpl implements RoomService {
                     fileName = "room " + room.getRoomNumber();
                     path = savePath + File.separator + fileName + ".jpg";
                     part.write(path);
-//                    TODO Logging save file to server
+
+                    log.info("Image saved to '" + path + "'");
+
                     path = SAVE_IMAGE_DIRECTORY + File.separator + fileName + ".jpg";
                     room.setPicturePath(path);
+
+                    log.info("Path set to room with number: '" + room.getRoomNumber() + "'");
                 }
             }
         } catch (IOException|ServletException e) {
             room.setPicturePath(null);
-//            TODO logger
-            System.out.println(e);
+            log.error("Exception",e);
             throw new ServiceException(e);
         }
 

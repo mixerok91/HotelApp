@@ -5,6 +5,7 @@ import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
 import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
 import by.stepanov.hotel.entity.*;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,6 +63,8 @@ public class BillDaoImpl implements BillDao {
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
 
+    private static final Logger log = Logger.getLogger(BillDaoImpl.class);
+
     @Override
     public void createBill(Bill bill) throws DAOException {
 
@@ -76,11 +79,13 @@ public class BillDaoImpl implements BillDao {
             preparedStatement.setBoolean(3, bill.isPaid());
 
             preparedStatement.executeUpdate();
-//            TODO: add logger
+
+            log.info("Bill: '" + bill + "' created");
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -105,11 +110,15 @@ public class BillDaoImpl implements BillDao {
             while (resultSet.next()) {
                 bill = readBillResultSet(resultSet);
             }
+
+            log.info("Bill: '" + bill + "' read");
+
             return bill;
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -132,10 +141,13 @@ public class BillDaoImpl implements BillDao {
             preparedStatement.setLong(4, bill.getId());
 
             preparedStatement.execute();
+
+            log.info("Bill: '" + bill + "' updated");
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -154,10 +166,13 @@ public class BillDaoImpl implements BillDao {
 
             preparedStatement.setLong(1, billId);
             preparedStatement.execute();
+
+            log.info("Bill with id: '" + billId + "' updated");
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);
@@ -182,11 +197,15 @@ public class BillDaoImpl implements BillDao {
                 Bill bill = readBillResultSet(resultSet);
                 bills.add(bill);
             }
+
+            log.info("All bills read");
+
             return bills;
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -211,11 +230,14 @@ public class BillDaoImpl implements BillDao {
                 bill = readBillResultSet(resultSet);
             }
 
+            log.info("Bill with reservationId: '" + reservationId + "' read");
+
             return bill;
         } catch (SQLException e) {
-            System.err.println(e);
+            log.error("SQL exception",e);
             throw new DAOException("SQL error", e);
         } catch (ConnectionPoolException e) {
+            log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
             connectionPool.closeConnection(connection, preparedStatement);

@@ -6,20 +6,23 @@ import by.stepanov.hotel.dao.RoomTypeDao;
 import by.stepanov.hotel.entity.RoomType;
 import by.stepanov.hotel.service.RoomTypeService;
 import by.stepanov.hotel.service.ServiceException;
+import org.apache.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class RoomTypeServiceImpl implements RoomTypeService {
-//TODO Logger in every methods
+
+    private static final Logger log = Logger.getLogger(RoomTypeServiceImpl.class);
+
     private RoomTypeDao roomTypeDao = DaoProvider.getInstance().getRoomTypeDao();
 
     @Override
     public void createRoomType(RoomType roomType) throws ServiceException {
         try {
             roomTypeDao.createRoomType(roomType);
+            log.info("Room type with id: '" + roomType.getId() + "' created");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -28,9 +31,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public RoomType readRoomType(long roomTypeId) throws ServiceException {
 
         try {
+            log.info("Room type with id: '" + roomTypeId + "' read");
             return roomTypeDao.readRoomType(roomTypeId);
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -39,8 +43,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void updateRoomType(RoomType roomType) throws ServiceException {
         try {
             roomTypeDao.updateRoomType(roomType);
+            log.info("Room type with id: '" + roomType.getId() + "' updated");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -49,8 +54,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void deleteRoomType(long roomTypeId) throws ServiceException {
         try {
             roomTypeDao.deleteRoomType(roomTypeId);
+            log.info("Room type with id: '" + roomTypeId + "' deleted");
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -58,9 +64,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Override
     public List<RoomType> getAllRoomTypes() throws ServiceException {
         try {
+            log.info("All room types read");
             return roomTypeDao.getAllRoomTypes();
         } catch (DAOException e) {
-            System.err.println(e);
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
     }
@@ -72,8 +79,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomType = roomTypeDao.getAllRoomTypes().stream()
                     .filter(roomType1 -> roomType1.getTypeName().equals(roomTypeName))
                     .findFirst().get();
+            log.info("Room type with with name: '" + roomType.getTypeName() + "' read");
         } catch (DAOException e) {
-//            TODO Logger
+            log.error("DAO exception",e);
             throw new ServiceException(e);
         }
         return roomType;
