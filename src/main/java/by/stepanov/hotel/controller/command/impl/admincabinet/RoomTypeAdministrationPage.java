@@ -13,20 +13,20 @@ import java.util.List;
 
 public class RoomTypeAdministrationPage implements Command {
 
-    public static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String ROOM_TYPES = "roomTypes";
     public static final String MESSAGE = "message";
     public static final String ROOM_TYPE_ADMINISTRATION = "roomTypeAdministration";
-    public static final String ERROR = "error?errorMessage=Ooops, something went wrong, try later";
+    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        try {
-            if (request.getSession() == null){
-                response.sendRedirect(LOGIN_PAGE);
-            }
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
 
+        try {
             List<RoomType> roomTypeList = ServiceProvider.getRoomTypeService().getAllRoomTypes();
             request.getSession().setAttribute(ROOM_TYPES, roomTypeList);
 
@@ -37,9 +37,12 @@ public class RoomTypeAdministrationPage implements Command {
                 response.sendRedirect(ROOM_TYPE_ADMINISTRATION);
             }
         } catch (ServiceException e) {
-            System.err.println(e);
-//            TODO logger
-            response.sendRedirect(ERROR);
+            response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", ROOM_TYPE_ADMINISTRATION);
     }
 }

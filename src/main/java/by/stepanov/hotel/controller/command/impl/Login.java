@@ -32,7 +32,7 @@ public class Login implements Command {
 
         request.setAttribute(EMAIL, email);
 
-        UserService userService = ServiceProvider.getInstance().getUserService();
+        UserService userService = ServiceProvider.getUserService();
         UserParamsValidator userParamsValidator = new UserParamsValidator();
 
         try {
@@ -45,12 +45,15 @@ public class Login implements Command {
                 user.setLastInDate(LocalDate.now());
                 userService.updateUser(user);
                 request.getSession().setAttribute(USER, user);
-
                 response.sendRedirect(MAIN_PAGE_CONTROLLER);
             }
         } catch (ServiceException e) {
-//            TODO logger
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }

@@ -14,12 +14,17 @@ import java.io.IOException;
 
 public class ReservationCancel implements Command {
 
-    public static final String RESERVATION_ID = "reservationId";
-    public static final String USER_CABINET_PAGE_CONTROLLER = "reservationController?command=user_cabinet_page";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
+    private static final String RESERVATION_ID = "reservationId";
+    private static final String USER_CABINET_PAGE_CONTROLLER = "mainController?command=user_cabinet_page";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
 
         ReservationService reservationService = ServiceProvider.getReservationService();
 
@@ -32,9 +37,13 @@ public class ReservationCancel implements Command {
 
             response.sendRedirect(USER_CABINET_PAGE_CONTROLLER);
         } catch (ServiceException e) {
-            System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }
 

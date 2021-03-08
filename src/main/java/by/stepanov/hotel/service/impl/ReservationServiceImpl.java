@@ -41,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setBill(billService.readBillByReservationId(reservationId));
 
             log.info("Reservation with id: '" + reservation.getId() + "' read");
-            return reservationDao.readReservation(reservationId);
+            return reservation;
         } catch (DAOException e) {
             log.error("DAO exception",e);
             throw new ServiceException(e);

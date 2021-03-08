@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(filterName = "AuthorizationFilter",
-        servletNames = "ReservationController",
         urlPatterns = {"/reservation/*", "/userCabinet/*", "/reservationConfirm/*", "/editUserData/*"})
 
 public class AuthorizationFilter implements Filter {

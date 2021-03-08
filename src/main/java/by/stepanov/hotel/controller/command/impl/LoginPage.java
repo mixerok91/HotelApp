@@ -15,4 +15,9 @@ public class LoginPage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.sendRedirect(LOGIN);
     }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", LOGIN);
+    }
 }

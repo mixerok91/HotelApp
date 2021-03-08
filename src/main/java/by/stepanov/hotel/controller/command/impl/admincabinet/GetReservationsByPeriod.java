@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class GetReservationsByPeriod implements Command {
@@ -24,11 +25,19 @@ public class GetReservationsByPeriod implements Command {
     private static final String RESERVATIONS_BY_PERIOD = "reservationsByPeriod";
     private static final String NO_RESERVATIONS_IN_THIS_PERIOD = "In this period reservations didn't find";
     private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
+    public static final String PARSE_DATA_ERROR = "Can't parse data";
+    public static final String ADMIN_PAGE_MESSAGE = "adminPageMessage";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         ReservationService reservationService = ServiceProvider.getReservationService();
         BillService billService = ServiceProvider.getBillService();
+
+        if (request.getSession() == null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
 
         String fromDate = request.getParameter(FROM_DATE);
         String beforeDate = request.getParameter(BEFORE_DATE);
@@ -48,14 +57,20 @@ public class GetReservationsByPeriod implements Command {
             request.setAttribute(RESERVATIONS_BY_PERIOD, reservationsByPeriod);
 
             if (reservationsByPeriod.isEmpty()){
-                request.setAttribute(DATE_ERROR, NO_RESERVATIONS_IN_THIS_PERIOD);
+                request.setAttribute(ADMIN_PAGE_MESSAGE, NO_RESERVATIONS_IN_THIS_PERIOD);
             }
 
             request.getRequestDispatcher(ADMIN_CABINET).forward(request, response);
-        } catch (ServiceException e) {
-//            TODO logger
-            System.err.println(e);
+        } catch (DateTimeParseException e) {
+            request.setAttribute(DATE_ERROR, PARSE_DATA_ERROR);
+            request.getRequestDispatcher(ADMIN_CABINET).forward(request, response);
+        }catch (ServiceException e) {
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }

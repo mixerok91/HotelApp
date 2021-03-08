@@ -4,6 +4,7 @@ import by.stepanov.hotel.controller.command.Command;
 import by.stepanov.hotel.controller.command.CommandProvider;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "MainController", urlPatterns = "/mainController")
+@MultipartConfig
 public class MainController extends HttpServlet {
 
     public static final String COMMAND = "command";
@@ -31,7 +33,9 @@ public class MainController extends HttpServlet {
         Command command;
 
         currentCommandName = request.getParameter(COMMAND);
+
         command = commandProvider.getCommand(currentCommandName);
+        command.savePathToSession(request);
         command.execute(request, response);
     }
 }

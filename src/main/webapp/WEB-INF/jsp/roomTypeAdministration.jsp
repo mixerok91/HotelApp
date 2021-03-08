@@ -6,15 +6,27 @@
     <title>Room type administration</title>
 </head>
 <body>
+<%--Смена локали--%>
+<h1>${sessionScope.get("localization")}</h1>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="RU">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="EN">
+</form>
     <span>Room type administration page</span>
     <div>
         ${param.get("message")}
     </div>
     <a href="mainController?command=main_page">To main page</a>
-    <a href="adminController?command=admin_cabinet_page">To admin page</a><br>
+    <a href="mainController?command=admin_cabinet_page">To admin page</a><br>
     <div>
         <div>
-            <form action="adminController" method="post">
+            <form action="mainController" method="post">
                 <input type="hidden" name="command" value="create_room_type">
                 <input type="text" name="typeName" value="Insert room type name" required>
                 <input type="text" name="russianDescription" value="Insert room type description in Russian" required>
@@ -25,7 +37,7 @@
         <c:forEach var="roomType" items="${sessionScope.roomTypes}">
             <div>
                 <div>
-                    <form action="adminController" method="post">
+                    <form action="mainController" method="post">
                         <input type="hidden" name="command" value="edit_room_type">
                         <input type="hidden" name="roomTypeId" value="${roomType.id}">
                         <input type="text" name="typeName" value="${roomType.typeName}" required>

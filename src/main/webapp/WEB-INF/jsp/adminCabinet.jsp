@@ -6,22 +6,34 @@
     <title>Admin's cabinet</title>
 </head>
 <body>
+<%--Смена локали--%>
+<h1>${sessionScope.get("localization")}</h1>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="RU">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="EN">
+</form>
 <span>Admin's Cabinet.</span>
 <a href="mainController?command=main_page">To main page</a>
 <div>
-    <form name="toRoomType" method="get" action="adminController">
+    <form name="toRoomType" method="get" action="mainController">
         <input type="hidden" name="command" value="room_type_administration_page">
         <input type="submit" value="Administrating room types">
     </form>
 </div>
 <div>
-    <form name="toRooms" method="get" action="adminController">
+    <form name="toRooms" method="get" action="mainController">
         <input type="hidden" name="command" value="room_administration_page">
         <input type="submit" value="Administrating rooms">
     </form>
 </div>
 <div>
-    <form name="getUser" method="get" action="adminController">
+    <form name="getUser" method="get" action="mainController">
         <input type="hidden" name="command" value="get_users_information_by_email">
         <input type="email" name="userEmail" required value="Type user email">
         <input type="submit" value="Get user's information">
@@ -29,7 +41,7 @@
 </div>
 <div>
     <span>${requestScope.dateError}</span>
-    <form name="getReservationsByPeriod" method="get" action="adminController">
+    <form name="getReservationsByPeriod" method="get" action="mainController">
         <input type="hidden" name="command" value="get_reservations_by_period">
         <input type="date" name="fromDate" required value="${requestScope.fromDate}">
         <input type="date" name="beforeDate" required value="${requestScope.beforeDate}">
@@ -38,27 +50,27 @@
 </div>
 <%--Message:--%>
 <div>
-    <span>${requestScope.message}</span><br>
+    <span>${requestScope.adminPageMessage}</span><br>
 </div>
 <%--If user found:--%>
-<c:if test="${not empty requestScope.user}">
+<c:if test="${not empty requestScope.adminPageUser}">
     <div>
         <div>
             <span>Found user's information:</span><br>
             <span>Email:</span><br>
-            <span>${requestScope.user.email}</span><br>
+            <span>${requestScope.adminPageUser.email}</span><br>
             <span>First name:</span><br>
-            <span>${requestScope.user.firstName}</span><br>
+            <span>${requestScope.adminPageUser.firstName}</span><br>
             <span>Surname:</span><br>
-            <span>${requestScope.user.surName}</span><br>
+            <span>${requestScope.adminPageUser.surName}</span><br>
             <span>Last in date:</span><br>
-            <span>${requestScope.user.lastInDate}</span><br>
+            <span>${requestScope.adminPageUser.lastInDate}</span><br>
         </div>
         <br>
-        <c:if test="${not empty requestScope.userReservations}">
+        <c:if test="${not empty requestScope.adminPageUserReservations}">
             <div>
                 <h3>User's reservations:</h3><br>
-                <c:forEach var="reservation" items="${requestScope.userReservations}">
+                <c:forEach var="reservation" items="${requestScope.adminPageUserReservations}">
                     <div>
                         <span>Reservation number:</span><br>
                         <span>${reservation.id}</span><br>

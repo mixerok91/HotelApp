@@ -20,7 +20,6 @@ public class MainPage implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
         RoomTypeService roomTypeService = ServiceProvider.getRoomTypeService();
 
         try {
@@ -30,5 +29,10 @@ public class MainPage implements Command {
         } catch (ServiceException e) {
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", MAIN);
     }
 }

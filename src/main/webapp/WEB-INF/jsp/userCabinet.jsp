@@ -7,24 +7,36 @@
 </head>
 <body>
 <div>
+    <%--Смена локали--%>
+    <h1>${sessionScope.get("localization")}</h1>
+    <form action="mainController" method="get">
+        <input type="hidden" name="command" value="change_locale">
+        <input type="hidden" name="lang" value="ru">
+        <input type="submit" value="RU">
+    </form>
+    <form action="mainController" method="get">
+        <input type="hidden" name="command" value="change_locale">
+        <input type="hidden" name="lang" value="eng">
+        <input type="submit" value="EN">
+    </form>
     User's Cabinet.
 <%--Показать все брони--%>
     <div>
-        <form action="reservationController" method="get">
+        <form action="mainController" method="get">
             <input type="hidden" name="command" value="show_all_users_reservations">
             <input type="submit" value="Show all reservations">
         </form>
     </div>
 <%--Показать актуальные брони--%>
     <div>
-        <form action="reservationController" method="get">
+        <form action="mainController" method="get">
             <input type="hidden" name="command" value="user_cabinet_page">
             <input type="submit" value="Show actual reservations">
         </form>
     </div>
 <%--Изменить данные пользователя--%>
     <div>
-        <form action="reservationController" method="get">
+        <form action="mainController" method="get">
             <input type="hidden" name="command" value="edit_user_data_page">
             <input type="submit" value="Edit user's info">
         </form>
@@ -38,12 +50,12 @@
                 <br>
                 <div>
                     <c:if test="${reservation.bookStatus.name() eq 'RESERVED'}">
-                     <form action="reservationController" method="post">
+                     <form action="mainController" method="post">
                             <input type="hidden" name="command" value="reservation_payment">
                             <input type="hidden" name="reservationId" value="${reservation.id}">
                             <input type="submit" value="Pay for reservation">
                         </form>
-                        <form action="reservationController" method="post">
+                        <form action="mainController" method="post">
                             <input type="hidden" name="command" value="reservation_cancel">
                             <input type="hidden" name="reservationId" value="${reservation.id}">
                             <input type="submit" value="Cancel for reservation">

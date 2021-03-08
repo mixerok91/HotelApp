@@ -18,6 +18,7 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public class RoomServiceImpl implements RoomService {
@@ -123,45 +124,5 @@ public class RoomServiceImpl implements RoomService {
         log.info("Get free rooms with room type '" + roomType + "' and from '" + inDate + "' to '" + outDate + "'");
 
         return rooms;
-    }
-
-    @Override
-    public String saveUploadedFileAndAddPathToRoom(HttpServletRequest request, Room room) throws ServiceException {
-        String absolutePath = request.getServletContext().getRealPath("");
-        String savePath = absolutePath + SAVE_IMAGE_DIRECTORY;
-        String path = room.getPicturePath();
-
-        File uploadDir = new File(savePath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
-
-        try {
-            boolean haveUploadedFile = request.getParts().stream()
-                    .anyMatch(part -> part.getSubmittedFileName() != null && !"".equals(part.getSubmittedFileName()));
-
-            if (haveUploadedFile) {
-                String fileName;
-
-                for (Part part : request.getParts()) {
-                    fileName = "room " + room.getRoomNumber();
-                    path = savePath + File.separator + fileName + ".jpg";
-                    part.write(path);
-
-                    log.info("Image saved to '" + path + "'");
-
-                    path = SAVE_IMAGE_DIRECTORY + File.separator + fileName + ".jpg";
-                    room.setPicturePath(path);
-
-                    log.info("Path set to room with number: '" + room.getRoomNumber() + "'");
-                }
-            }
-        } catch (IOException|ServletException e) {
-            room.setPicturePath(null);
-            log.error("Exception",e);
-            throw new ServiceException(e);
-        }
-
-        return path;
     }
 }

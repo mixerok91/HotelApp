@@ -23,7 +23,7 @@ public class ScheduleRegister {
                             .withIdentity("checkReservationStatusJob", Scheduler.DEFAULT_GROUP)
                             .build(),
                     newTrigger()
-                            .withIdentity("defaultTrgger", Scheduler.DEFAULT_GROUP)
+                            .withIdentity("defaultTrigger", Scheduler.DEFAULT_GROUP)
                             .withSchedule(cronSchedule("* * 1/12 * * ?"))
                             .build());
 

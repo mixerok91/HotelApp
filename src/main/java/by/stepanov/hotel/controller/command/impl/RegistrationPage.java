@@ -15,4 +15,9 @@ public class RegistrationPage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.sendRedirect(REGISTRATION);
     }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", REGISTRATION);
+    }
 }

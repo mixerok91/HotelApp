@@ -13,7 +13,7 @@ import java.util.List;
 
 public class RoomAdministrationPage implements Command {
 
-    public static final String LOGIN_PAGE = "userController?command=login_page";
+    public static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String ROOMS = "rooms";
     public static final String MESSAGE = "message";
     public static final String ROOM_ADMINISTRATION = "roomAdministration";
@@ -21,11 +21,12 @@ public class RoomAdministrationPage implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        try {
-            if (request.getSession()==null){
-                response.sendRedirect(LOGIN_PAGE);
-            }
 
+        if (request.getSession()==null){
+            response.sendRedirect(LOGIN_PAGE);
+        }
+
+        try {
             List<Room> roomList = ServiceProvider.getRoomService().getAllRooms();
             request.getSession().setAttribute(ROOMS, roomList);
 
@@ -36,9 +37,12 @@ public class RoomAdministrationPage implements Command {
                 response.sendRedirect(ROOM_ADMINISTRATION);
             }
         } catch (ServiceException e) {
-            System.err.println(e);
-//            TODO logger
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", ROOM_ADMINISTRATION);
     }
 }

@@ -18,6 +18,4 @@ public interface RoomService {
     List<Room> getAllRooms() throws ServiceException;
 
     List<Room> getFreeRooms(String inDate, String outDate, String roomType) throws ServiceException;
-
-    String saveUploadedFileAndAddPathToRoom(HttpServletRequest request, Room room) throws ServiceException;
 }

@@ -48,6 +48,8 @@ public class CommandProvider {
         commands.put(ParameterName.CREATE_ROOM, new CreateRoom());
         commands.put(ParameterName.EDIT_ROOM, new EditRoom());
         commands.put(ParameterName.GET_USERS_INFORMATION_BY_EMAIL, new GetUsersReservationsByEmail());
+
+        commands.put(ParameterName.CHANGE_LOCALE, new ChangeLocale());
     }
 
     public Command getCommand(String commandName){

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(filterName = "AdminRoleFilter",
-        servletNames = "AdminController",
         urlPatterns = {"/adminCabinet/*", "/roomAdministration/*", "/roomTypeAdministration/*"})
 public class AdminRoleFilter implements Filter {
 

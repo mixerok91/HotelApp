@@ -2,7 +2,6 @@ package by.stepanov.hotel.controller.command.impl.reservation;
 
 import by.stepanov.hotel.controller.command.Command;
 import by.stepanov.hotel.entity.Bill;
-import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.service.BillService;
 import by.stepanov.hotel.service.ReservationService;
 import by.stepanov.hotel.service.ServiceException;
@@ -16,8 +15,7 @@ import java.time.LocalDateTime;
 
 public class ReservationConfirm implements Command {
 
-    private static final String LOGIN_PAGE = "userController?command=login_page";
-    public static final String SELECTED_RESERVATION = "selectedReservation";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String SELECTED_BILL = "selectedBill";
     public static final String MAIN_PAGE_CONTROLLER = "mainController?command=main_page";
     public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong.";
@@ -33,22 +31,23 @@ public class ReservationConfirm implements Command {
         BillService billService = ServiceProvider.getBillService();
 
         try {
-            Reservation reservation = (Reservation) request.getSession().getAttribute(SELECTED_RESERVATION);
             Bill bill = (Bill) request.getSession().getAttribute(SELECTED_BILL);
-            reservation.setCreationTime(LocalDateTime.now());
-            reservation.setVisible(true);
-            bill.setReservation(reservation);
+            bill.getReservation().setCreationTime(LocalDateTime.now());
+            bill.getReservation().setVisible(true);
 
-            reservationService.createReservation(reservation);
+            reservationService.createReservation(bill.getReservation());
             billService.createBill(bill);
 
-            request.getSession().removeAttribute(SELECTED_RESERVATION);
             request.getSession().removeAttribute(SELECTED_BILL);
 
             response.sendRedirect(MAIN_PAGE_CONTROLLER);
         } catch (ServiceException|ClassCastException e) {
-            System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }

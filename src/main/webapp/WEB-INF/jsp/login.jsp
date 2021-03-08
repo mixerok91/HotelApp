@@ -3,6 +3,17 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
+    <fmt:setLocale value="${sessionScope.localization}"/>
+    <fmt:setBundle basename="local" var="loc"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.button.eng" var="eng_button"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.button.rus" var="rus_button"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.string.welcome" var="welcome"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.string.type_your_email" var="type_email"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.string.type_your_password" var="type_password"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.string.ref.to_registration_page" var="to_registration_page"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.string.ref.to_main_page" var="to_main_page"/>
+    <fmt:message bundle="${loc}" key="local.loginpage.button.login" var="login_button"/>
+
     <title>Login page</title>
     <style>
         .errorText {
@@ -12,20 +23,31 @@
     </style>
 </head>
 <body>
+<%--Смена локали--%>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="${rus_button}">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="${eng_button}">
+</form>
 <div>
-    <h2>Welcome to login page</h2>
-    <a href="userController?command=registration_page">To registration page</a><br>
-    <a href="mainController?command=main_page">To main page</a>
+    <h2>${welcome}</h2>
+    <a href="mainController?command=registration_page">${to_registration_page}</a><br>
+    <a href="mainController?command=main_page">${to_main_page}</a>
     <div>
-        <form action="userController" method="post">
+        <form action="mainController" method="post">
             <input type="hidden" name="command" value="login">
-            <div>Type your email:</div>
+            <div>${type_email}</div>
             <div><input type="email" name="email" required value="${requestScope.email}"></div>
             <div class="errorText">${requestScope.errors.get("emailError")}<br></div>
-            <div>Type your password:</div>
+            <div>${type_password}</div>
             <div><input type="password" name="password" required></div>
             <div class="errorText">${requestScope.errors.get("passwordError")}<br></div>
-            <div><input type="submit" value="Login in"></div>
+            <div><input type="submit" value="${login_button}"></div>
         </form>
     </div>
 </div>

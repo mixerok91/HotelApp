@@ -6,9 +6,21 @@
     <title>Rooms administration</title>
 </head>
 <body>
+<%--Смена локали--%>
+<h1>${sessionScope.get("localization")}</h1>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="RU">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="EN">
+</form>
 <span>Rooms administration</span>
 <a href="mainController?command=main_page">To main page</a>
-<a href="adminController?command=admin_cabinet_page">To admin page</a><br>
+<a href="mainController?command=admin_cabinet_page">To admin page</a><br>
 
 <div>
     ${param.get("message")}
@@ -17,8 +29,8 @@
 <div>
     <div>
         <span>Create new room:</span>
-        <form action="adminController" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="command" value="create_room" required>
+        <form action="mainController" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="command" value="create_room">
             <span>Input room name:</span><br>
             <input type="text" name="roomNumber" value="Input room number" required><br>
             <span>Input persons:</span><br>
@@ -43,7 +55,7 @@
         <c:forEach var="room" items="${sessionScope.rooms}">
             <div>
                 <div>
-                    <form action="adminController" method="post" enctype="multipart/form-data">
+                    <form action="mainController" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="command" value="edit_room">
                         <input type="hidden" name="roomId" value="${room.id}">
                         <span>Input room name:</span><br>

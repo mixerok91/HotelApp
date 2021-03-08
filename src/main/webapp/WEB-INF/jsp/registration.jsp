@@ -3,6 +3,19 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
+    <fmt:setLocale value="${sessionScope.localization}"/>
+    <fmt:setBundle basename="local" var="loc"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.button.eng" var="eng_button"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.button.rus" var="rus_button"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.welcome" var="welcome"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.ref.to_login_page" var="to_login_page"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.ref.to_main_page" var="to_main_page"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.registration_form" var="registration_form"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.type_your_email" var="type_your_email"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.type_your_password" var="type_your_password"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.type_first_name" var="type_your_firstname"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.string.type_surname" var="type_your_surname"/>
+    <fmt:message bundle="${loc}" key="local.registrationpage.button.register_new_user" var="register_button"/>
     <title>Registration</title>
     <style>
         .errorText {
@@ -12,29 +25,40 @@
     </style>
 </head>
 <body>
+<%--Смена локали--%>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="${rus_button}">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="${eng_button}">
+</form>
 <div>
-    <h3>Welcome to registration page</h3>
+    <h3>${welcome}</h3>
 </div>
 <div>
-    <a href="userController?command=login_page">To login page</a><br>
-    <a href="mainController?command=main_page">To main page</a>
-    <h4>Registration form:</h4>
+    <a href="mainController?command=login_page">${to_login_page}</a><br>
+    <a href="mainController?command=main_page">${to_main_page}</a>
+    <h4>${registration_form}</h4>
     <div>
-        <form action="userController" method="post">
+        <form action="mainController" method="post">
             <input type="hidden" name="command" value="registration">
-            <div>Type your email:</div>
+            <div>${type_your_email}</div>
             <div><input type="email" name="email" required value="${requestScope.user.email}"></div>
             <div class="errorText">${requestScope.errors.get("emailError")}<br></div>
-            <div>Type your password:</div>
+            <div>${type_your_password}</div>
             <div><input type="password" name="password" required></div>
             <div class="errorText">${requestScope.errors.get("passwordError")}<br></div>
-            <div>Type your First Name:</div>
+            <div>${type_your_firstname}</div>
             <div><input type="text" name="firstName" required value="${requestScope.user.firstName}"></div>
             <div class="errorText">${requestScope.errors.get("firsNameError")}<br></div>
-            <div>Type your Surname:</div>
+            <div>${type_your_surname}</div>
             <div><input type="text" name="surName" required value="${requestScope.user.surName}"></div>
             <div class="errorText">${requestScope.errors.get("surNameError")}<br></div>
-            <div><input type="submit" value="Register new user"></div>
+            <div><input type="submit" value="${register_button}"></div>
         </form>
     </div>
 </div>

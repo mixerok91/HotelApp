@@ -19,7 +19,7 @@ public class FindSuitableRooms implements Command {
     public static final String OUT_DATE = "outDate";
     public static final String ROOM_TYPE = "roomType";
     public static final String DATE_ERROR = "dateError";
-    public static final String RESERVATION_PAGE_CONTROLLER = "reservationController?command=reservation_page";
+    public static final String RESERVATION_PAGE = "reservation";
     public static final String FOUND_ROOMS = "foundRooms";
     public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
 
@@ -38,16 +38,20 @@ public class FindSuitableRooms implements Command {
         try {
             if (SuitableDateValidator.checkDates(inDate, outDate) != null){
                 request.setAttribute(DATE_ERROR, SuitableDateValidator.checkDates(inDate, outDate));
-                request.getRequestDispatcher(RESERVATION_PAGE_CONTROLLER).forward(request, response);
+                request.getRequestDispatcher(RESERVATION_PAGE).forward(request, response);
             }
 
             List<Room> freeRooms = roomService.getFreeRooms(inDate, outDate, roomType);
 
             request.setAttribute(FOUND_ROOMS, freeRooms);
-            request.getRequestDispatcher(RESERVATION_PAGE_CONTROLLER).forward(request, response);
+            request.getRequestDispatcher(RESERVATION_PAGE).forward(request, response);
         } catch (ServiceException e) {
-            System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }

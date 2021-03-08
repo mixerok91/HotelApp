@@ -13,7 +13,11 @@ public class EditUserDataPage implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
         response.sendRedirect(EDIT_USER_DATA);
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", EDIT_USER_DATA);
     }
 }

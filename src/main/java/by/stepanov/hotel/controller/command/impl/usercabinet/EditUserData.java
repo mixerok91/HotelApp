@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class EditUserData implements Command {
 
-    private static final String LOGIN_PAGE = "userController?command=login_page";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String USER = "user";
     public static final String OLD_PASSWORD = "oldPassword";
     public static final String NEW_PASSWORD = "newPassword";
@@ -24,7 +24,7 @@ public class EditUserData implements Command {
     public static final String SUR_NAME = "surName";
     public static final String ERRORS = "errors";
     public static final String EDIT_USER_DATA = "/editUserData";
-    public static final String USER_CABINET_PAGE_CONTROLLER = "reservationController?command=user_cabinet_page";
+    public static final String USER_CABINET_PAGE_CONTROLLER = "mainController?command=user_cabinet_page";
     public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
 
     @Override
@@ -35,7 +35,7 @@ public class EditUserData implements Command {
         }
 
         UserParamsValidator userParamsValidator = new UserParamsValidator();
-        UserService userService = ServiceProvider.getInstance().getUserService();
+        UserService userService = ServiceProvider.getUserService();
 
         try {
             User currentUser = (User) request.getSession().getAttribute(USER);
@@ -60,5 +60,10 @@ public class EditUserData implements Command {
         } catch (ServiceException e) {
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+
     }
 }

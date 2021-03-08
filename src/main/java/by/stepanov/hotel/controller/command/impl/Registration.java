@@ -22,8 +22,8 @@ public class Registration implements Command {
     public static final String SUR_NAME = "surName";
     public static final String USER = "user";
     public static final String ERRORS = "errors";
-    public static final String REGISTRATION = "/registration";
-    public static final String LOGIN_PAGE_CONTROLLER = "userController?command=login_page";
+    public static final String REGISTRATION_PAGE = "/registration";
+    public static final String LOGIN_PAGE = "login";
     public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
 
     @Override
@@ -46,14 +46,17 @@ public class Registration implements Command {
 
             if (!errors.isEmpty()){
                 request.setAttribute(ERRORS, errors);
-                request.getRequestDispatcher(REGISTRATION).forward(request,response);
+                request.getRequestDispatcher(REGISTRATION_PAGE).forward(request,response);
             } else {
                 userService.createUser(user);
-                response.sendRedirect(LOGIN_PAGE_CONTROLLER);
+                response.sendRedirect(LOGIN_PAGE);
             }
-
         } catch (ServiceException e) {
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
     }
 }

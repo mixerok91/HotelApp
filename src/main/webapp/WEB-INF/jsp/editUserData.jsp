@@ -12,10 +12,22 @@
     </style>
 </head>
 <body>
+<%--Смена локали--%>
+<h1>${sessionScope.get("localization")}</h1>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="ru">
+    <input type="submit" value="RU">
+</form>
+<form action="mainController" method="get">
+    <input type="hidden" name="command" value="change_locale">
+    <input type="hidden" name="lang" value="eng">
+    <input type="submit" value="EN">
+</form>
 <div>
     <h2>Edit user data.</h2>
     <div>
-        <form action="reservationController" method="post">
+        <form action="mainController" method="post">
             <input type="hidden" name="command" value="edit_user_data">
             <div>Current email:</div>
             <div>${sessionScope.user.email}</div>

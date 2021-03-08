@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 public class ReservationConfirmPage implements Command {
 
-    private static final String LOGIN_PAGE = "userController?command=login_page";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String ROOM_ID = "roomId";
     public static final String USER = "user";
     public static final String IN_DATE = "inDate";
@@ -50,8 +50,12 @@ public class ReservationConfirmPage implements Command {
 
             response.sendRedirect(RESERVATION_CONFIRM);
         } catch (ServiceException e) {
-            System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", RESERVATION_CONFIRM);
     }
 }

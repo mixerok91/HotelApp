@@ -15,7 +15,7 @@ import java.util.List;
 public class ReservationPage implements Command {
 
     public static final String ROOM_TYPES = "roomTypes";
-    public static final String RESERVATION = "/reservation";
+    public static final String RESERVATION = "reservation";
     public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong";
 
     @Override
@@ -25,12 +25,15 @@ public class ReservationPage implements Command {
 
         try {
             List<RoomType> roomTypes = roomTypeService.getAllRoomTypes();
-            request.setAttribute(ROOM_TYPES, roomTypes);
-            request.getRequestDispatcher(RESERVATION).forward(request, response);
+            request.getSession().setAttribute(ROOM_TYPES, roomTypes);
+            response.sendRedirect(RESERVATION);
         } catch (ServiceException e) {
-//            TODO Logger
-            System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", RESERVATION);
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ShowAllUsersReservations implements Command {
 
-    private static final String LOGIN_PAGE = "userController?command=login_page";
+    private static final String LOGIN_PAGE = "mainController?command=login_page";
     public static final String USER = "user";
     public static final String USER_RESERVATIONS = "userReservations";
     public static final String USER_CABINET = "userCabinet";
@@ -43,5 +43,10 @@ public class ShowAllUsersReservations implements Command {
             System.err.println(e);
             response.sendRedirect(ERROR_PAGE);
         }
+    }
+
+    @Override
+    public void savePathToSession(HttpServletRequest request) {
+        request.getSession().setAttribute("lastPath", USER_CABINET);
     }
 }
