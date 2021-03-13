@@ -22,6 +22,10 @@ public class MainPage implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         RoomTypeService roomTypeService = ServiceProvider.getRoomTypeService();
 
+        if (request.getSession(true).getAttribute("localization") == null){
+            request.getSession().setAttribute("localization", "eng");
+        }
+
         try {
             List<RoomType> roomTypes = roomTypeService.getAllRoomTypes();
             request.getSession().setAttribute(ROOM_TYPES, roomTypes);

@@ -41,7 +41,7 @@
     <input type="hidden" name="lang" value="eng">
     <input type="submit" value="${eng_button}">
 </form>
-<h1>Reservation page</h1>
+<h1>${reservation_page}</h1>
 <a href="mainController?command=main_page">${to_main_page}</a>
 <div>
     <%-- Форма для поиска свободного номера на нужные даты--%>

@@ -4,68 +4,132 @@
 <html>
 <head>
     <title>User's Cabinet</title>
+    <fmt:setLocale value="${sessionScope.localization}"/>
+    <fmt:setBundle basename="local" var="loc"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.eng" var="eng_button"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.rus" var="rus_button"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.users_cabinet" var="users_cabinet"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.show_all_reservations" var="show_all_reservations"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.show_actual_reservations" var="show_actual_reservations"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.edit_user_info" var="edit_user_info"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.pay_for_reservation" var="pay_for_reservation"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.button.cancel_for_reservation" var="cancel_for_reservation"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.ref.to_main_page" var="to_main_page"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.dates" var="dates"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.from" var="from"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.to" var="to"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.room_type_name" var="room_type_name"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.room_number" var="room_number"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.room_description" var="room_description"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.price" var="price"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.price_per_day" var="price_per_day"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.total_amount" var="total_amount"/>
+    <fmt:message bundle="${loc}" key="local.usercabinetpage.string.users_reservations" var="users_reservations"/>
 </head>
 <body>
+<c:if test="${empty sessionScope.user.role}">
+    <c:redirect url="/mainController?command=main_page"/>
+</c:if>
 <div>
     <%--Смена локали--%>
-    <h1>${sessionScope.get("localization")}</h1>
     <form action="mainController" method="get">
         <input type="hidden" name="command" value="change_locale">
         <input type="hidden" name="lang" value="ru">
-        <input type="submit" value="RU">
+        <input type="submit" value="${rus_button}">
     </form>
     <form action="mainController" method="get">
         <input type="hidden" name="command" value="change_locale">
         <input type="hidden" name="lang" value="eng">
-        <input type="submit" value="EN">
+        <input type="submit" value="${eng_button}">
     </form>
-    User's Cabinet.
-<%--Показать все брони--%>
+    ${users_cabinet}
+    <%--Показать все брони--%>
     <div>
         <form action="mainController" method="get">
             <input type="hidden" name="command" value="show_all_users_reservations">
-            <input type="submit" value="Show all reservations">
+            <input type="submit" value="${show_all_reservations}">
         </form>
     </div>
-<%--Показать актуальные брони--%>
+    <%--Показать актуальные брони--%>
     <div>
         <form action="mainController" method="get">
             <input type="hidden" name="command" value="user_cabinet_page">
-            <input type="submit" value="Show actual reservations">
+            <input type="submit" value="${show_actual_reservations}">
         </form>
     </div>
-<%--Изменить данные пользователя--%>
+    <%--Изменить данные пользователя--%>
     <div>
         <form action="mainController" method="get">
             <input type="hidden" name="command" value="edit_user_data_page">
-            <input type="submit" value="Edit user's info">
+            <input type="submit" value="${edit_user_info}">
         </form>
     </div>
-<%--Отображает брони--%>
+    <%--Отображает брони--%>
     <div>
         <c:if test="${sessionScope.userReservations.size() > 0}">
-            <div>User's reservations:</div>
+            <div>${users_reservations}</div>
+            <div>
             <c:forEach items="${sessionScope.userReservations}" var="reservation">
-                <div>${reservation}</div>
+                <div>
+                        ${dates}<br>
+                        ${from} ${reservation.inDate} ${to} ${reservation.outDate}
+                </div>
                 <br>
                 <div>
+                        ${room_type_name}<br>
+                        ${reservation.room.roomType.typeName}
+                </div>
+                <br>
+                <div>
+                        ${room_number}<br>
+                        ${reservation.room.roomNumber}
+                </div>
+                <br>
+                <div>
+                        ${room_description}<br>
+                    <c:choose>
+                        <c:when test="${sessionScope.localization.equals('ru')}">
+                            ${reservation.room.roomType.descriptionRus}
+                        </c:when>
+                        <c:otherwise>
+                            ${reservation.room.roomType.descriptionEng}
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <br>
+                </div>
+                <br>
+                <div>
+                        ${price}
+                    <div>
+                            ${price_per_day}<br>
+                            ${reservation.room.dayCost}$
+                    </div>
+                    <br>
+                    <div>
+                            ${total_amount}<br>
+                            ${reservation.room.dayCost * (reservation.outDate.toEpochDay() - reservation.inDate.toEpochDay())}$
+                    </div>
+                    <br>
+                </div>
+                <div>
                     <c:if test="${reservation.bookStatus.name() eq 'RESERVED'}">
-                     <form action="mainController" method="post">
+                        <form action="mainController" method="post">
                             <input type="hidden" name="command" value="reservation_payment">
                             <input type="hidden" name="reservationId" value="${reservation.id}">
-                            <input type="submit" value="Pay for reservation">
+                            <input type="submit" value="${pay_for_reservation}">
                         </form>
                         <form action="mainController" method="post">
                             <input type="hidden" name="command" value="reservation_cancel">
                             <input type="hidden" name="reservationId" value="${reservation.id}">
-                            <input type="submit" value="Cancel for reservation">
-                        </form> <br>
+                            <input type="submit" value="${cancel_for_reservation}">
+                        </form>
+                        <br>
                     </c:if>
                 </div>
+                ------------------------------------------------
             </c:forEach>
         </c:if>
     </div>
-<a href="mainController?command=main_page">To main page</a>
-</div>
-</body>
-</html>
+
+    <a href="mainController?command=main_page">${to_main_page}</a>

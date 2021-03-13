@@ -32,7 +32,6 @@ public class ReservationDaoImpl implements ReservationDao {
             "UPDATE reservations SET users_id=?, rooms_id=?, creation_time=?, in_date=?, out_date=?, book_status=?, is_visible=? " +
                     "WHERE (reservations.id=?)";
     private static final String DELETE_RESERVATION_QUERY = "DELETE FROM reservations WHERE id = ?";
-//    TODO: delete bill
     private static final String READ_ALL_RESERVATIONS_QUERY =
             "SELECT reservations.id, reservations.creation_time, reservations.in_date, reservations.out_date, reservations.book_status, reservations.is_visible, " +
                     "reservations.users_id, users.email, users.password, users.firstname, users.surname, users.role, " +

@@ -38,7 +38,8 @@ public class UserCabinetPage implements Command {
             session.setAttribute(USER_RESERVATIONS, actualUserReservations);
 
             response.sendRedirect(USER_CABINET);
-        } catch (ServiceException e) {response.sendRedirect(ERROR_PAGE);
+        } catch (ServiceException e) {
+            response.sendRedirect(ERROR_PAGE);
         }
     }
 
