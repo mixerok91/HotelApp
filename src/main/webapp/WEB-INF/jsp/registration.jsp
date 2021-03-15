@@ -23,28 +23,34 @@
             font-size: small;
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
-<body>
-<%--Смена локали--%>
-<form action="mainController" method="get">
-    <input type="hidden" name="command" value="change_locale">
-    <input type="hidden" name="lang" value="ru">
-    <input type="submit" value="${rus_button}">
-</form>
-<form action="mainController" method="get">
-    <input type="hidden" name="command" value="change_locale">
-    <input type="hidden" name="lang" value="eng">
-    <input type="submit" value="${eng_button}">
-</form>
-<div>
-    <h3>${welcome}</h3>
-</div>
-<div>
-    <a href="mainController?command=login_page">${to_login_page}</a><br>
-    <a href="mainController?command=main_page">${to_main_page}</a>
-    <h4>${registration_form}</h4>
-    <div>
-        <form action="mainController" method="post">
+<body class="body">
+<div class="main_content">
+    <header>
+        <div class="lang_buttons">
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="ru">
+                <input type="submit" value="${rus_button}">
+            </form>
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="eng">
+                <input type="submit" value="${eng_button}">
+            </form>
+        </div>
+        <div class="welcome_to_page">
+            <h3>${welcome}</h3>
+        </div>
+        <div class="references">
+            <a href="mainController?command=login_page">${to_login_page}</a>
+            <a href="mainController?command=main_page">${to_main_page}</a>
+        </div>
+    </header>
+    <div class="horizontal_center">
+        <div class="center_form" style="font-size: 14px">${registration_form}</div>
+        <form action="mainController" method="post" class="center_form">
             <input type="hidden" name="command" value="registration">
             <div>${type_your_email}</div>
             <div><input type="email" name="email" required value="${requestScope.user.email}"></div>
@@ -59,6 +65,7 @@
             <div><input type="text" name="surName" required value="${requestScope.user.surName}"></div>
             <div class="errorText">${requestScope.errors.get("surNameError")}<br></div>
             <div><input type="submit" value="${register_button}"></div>
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
         </form>
     </div>
 </div>

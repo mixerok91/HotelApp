@@ -64,7 +64,7 @@ public class ReservationDaoImpl implements ReservationDao {
     private static final String GET_LAST_INSERT_ID =
             "SELECT LAST_INSERT_ID() FROM reservations";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final Logger log = Logger.getLogger(ReservationDaoImpl.class);
 
@@ -110,7 +110,7 @@ public class ReservationDaoImpl implements ReservationDao {
             log.error("Connection pool exception", e);
             throw new DAOException("Connection pool error", e);
         } finally {
-            connectionPool.closeConnection(connection, preparedStatement);
+            connectionPool.closeConnection(connection, preparedStatement, resultSet);
         }
     }
 
@@ -134,7 +134,6 @@ public class ReservationDaoImpl implements ReservationDao {
             }
 
             log.info("Reservation: '" + reservation + "' read");
-
             return reservation;
         } catch (SQLException e){
             log.error("SQL exception",e);

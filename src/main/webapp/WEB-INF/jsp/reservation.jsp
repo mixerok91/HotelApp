@@ -28,89 +28,102 @@
             font-size: small;
         }
     </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
-<body>
-<%--Смена локали--%>
-<form action="mainController" method="get">
-    <input type="hidden" name="command" value="change_locale">
-    <input type="hidden" name="lang" value="ru">
-    <input type="submit" value="${rus_button}">
-</form>
-<form action="mainController" method="get">
-    <input type="hidden" name="command" value="change_locale">
-    <input type="hidden" name="lang" value="eng">
-    <input type="submit" value="${eng_button}">
-</form>
-<h1>${reservation_page}</h1>
-<a href="mainController?command=main_page">${to_main_page}</a>
-<div>
-    <%-- Форма для поиска свободного номера на нужные даты--%>
-    <form action="mainController" method="get">
-        <input type="hidden" name="command" value="find_suitable_rooms">
-        <div class="errorText">${requestScope.dateError}</div>
-        <div>${in_date}</div>
-        <div><input type="date" name="inDate" required value="${requestScope.inDate}"></div>
-        <div>${out_date}</div>
-        <div><input type="date" name="outDate" required value="${requestScope.outDate}"></div>
-        <div>${room_type}</div>
-        <div>
-            <select name="roomType">
-                <option>Any type</option>
-                <c:forEach items="${sessionScope.roomTypes}" var="roomType">
-                    <option>${roomType.typeName}</option>
-                </c:forEach>
-            </select>
+<body class="body">
+<div class="main_content">
+    <header>
+        <div class="lang_buttons">
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="ru">
+                <input type="submit" value="${rus_button}">
+            </form>
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="eng">
+                <input type="submit" value="${eng_button}">
+            </form>
         </div>
-        <div><input type="submit" value="${search_rooms}"></div>
-    </form>
-    <%--Выбор свободного номера для бронирования--%>
-    <div>
-        <c:if test="${requestScope.foundRooms.size() == 0}">
-            <div>${no_suitable_rooms}</div>
-        </c:if>
-        <c:if test="${requestScope.foundRooms.size() > 0}">
-            <div>${available_rooms}</div>
-        </c:if>
-        <c:forEach items="${requestScope.foundRooms}" var="room">
-        <div>${room_number}<br>
-                ${room.roomNumber}</div>
-        <div>${persons}<br>
-                ${room.persons}</div>
-        <div>${cost_per_day}<br>
-                ${room.dayCost}</div>
-        <div>${room_type_name}<br>
-                ${room.roomType.typeName}</div>
-        <div>${room_description}<br>
-            <c:choose>
-                <c:when test="${sessionScope.localization.equals('ru')}">
-                    ${room.roomType.descriptionRus}
-                </c:when>
-                <c:otherwise>
-                    ${room.roomType.descriptionEng}
-                </c:otherwise>
-            </c:choose>
+        <div class="welcome_to_page">
+            <h1>${reservation_page}</h1>
         </div>
-        <div>
-            <div>${room.roomNumber}</div>
+        <div class="references">
+            <a href="mainController?command=main_page">${to_main_page}</a>
+        </div>
+    </header>
+    <div class="horizontal_center">
+        <form action="mainController" method="get" class="center_form">
+            <input type="hidden" name="command" value="find_suitable_rooms">
+            <div class="errorText">${requestScope.dateError}</div>
+            ${in_date}
+            <input type="date" name="inDate" required value="${requestScope.inDate}">
+            ${out_date}
+            <input type="date" name="outDate" required value="${requestScope.outDate}">
+            ${room_type}
             <div>
-                <c:if test="${not empty room.picturePath}">
-                    <img src="${room.picturePath}" width="150" height="150">
+                <select name="roomType">
+                    <option>Any type</option>
+                    <c:forEach items="${sessionScope.roomTypes}" var="roomType">
+                        <option>${roomType.typeName}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div><input type="submit" value="${search_rooms}"></div>
+        </form>
+        <div>
+            <div class="center_form" style="font-size: 14px">
+                <c:if test="${requestScope.foundRooms.size() == 0}">
+                    ${no_suitable_rooms}
+                </c:if>
+                <c:if test="${requestScope.foundRooms.size() > 0}">
+                    ${available_rooms}
                 </c:if>
             </div>
-            <div><br>
-                <form action="mainController" method="post">
-                    <input type="hidden" name="command" value="reservation_confirm_page">
-                    <input type="hidden" name="roomId" value="${room.id}">
-                    <input type="hidden" name="roomTypeId" value="${room.roomType.id}">
-                    <input type="hidden" name="inDate" value="${requestScope.inDate}">
-                    <input type="hidden" name="outDate" value="${requestScope.outDate}">
-                    <input type="submit" value="${reserve_room}">
-                </form>
-            </div>
-            ------------------------------------------
-            </c:forEach>
+            <ul>
+                <c:forEach items="${requestScope.foundRooms}" var="room">
+                    <li>
+                        <div>${room_number}<br>
+                                ${room.roomNumber}</div>
+                        <div>${persons}<br>
+                                ${room.persons}</div>
+                        <div>${cost_per_day}<br>
+                                ${room.dayCost}</div>
+                        <div>${room_type_name}<br>
+                                ${room.roomType.typeName}</div>
+                        <div>${room_description}<br>
+                            <c:choose>
+                                <c:when test="${sessionScope.localization.equals('ru')}">
+                                    ${room.roomType.descriptionRus}
+                                </c:when>
+                                <c:otherwise>
+                                    ${room.roomType.descriptionEng}
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div>
+                            <div>
+                                <c:if test="${not empty room.picturePath}">
+                                    <img src="${room.picturePath}" width="150" height="150">
+                                </c:if>
+                            </div>
+                            <div><br>
+                                <form action="mainController" method="post">
+                                    <input type="hidden" name="command" value="reservation_confirm_page">
+                                    <input type="hidden" name="roomId" value="${room.id}">
+                                    <input type="hidden" name="roomTypeId" value="${room.roomType.id}">
+                                    <input type="hidden" name="inDate" value="${requestScope.inDate}">
+                                    <input type="hidden" name="outDate" value="${requestScope.outDate}">
+                                    <input type="submit" value="${reserve_room}">
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </c:forEach>
+            </ul>
         </div>
     </div>
-
+</div>
+</div>
 </body>
 </html>

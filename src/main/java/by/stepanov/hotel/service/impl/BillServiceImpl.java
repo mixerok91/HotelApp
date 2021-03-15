@@ -15,7 +15,7 @@ public class BillServiceImpl implements BillService {
 
     private static final Logger log = Logger.getLogger(BillServiceImpl.class);
 
-    private BillDao billDao = DaoProvider.getInstance().getBillDao();
+    private final BillDao billDao = DaoProvider.getInstance().getBillDao();
 
     @Override
     public void createBill(Bill bill) throws ServiceException {
@@ -31,8 +31,9 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill readBill(long billId) throws ServiceException {
         try {
+            Bill bill = billDao.readBill(billId);
             log.info("Bill with id: '" + billId + "' read");
-            return billDao.readBill(billId);
+            return bill;
         } catch (DAOException e) {
             log.error("DAO exception",e);
             throw new ServiceException(e);
@@ -64,8 +65,9 @@ public class BillServiceImpl implements BillService {
     @Override
     public List<Bill> getAllBills() throws ServiceException {
         try {
+            List<Bill> billList = billDao.getAllBills();
             log.info("All bills read");
-            return billDao.getAllBills();
+            return billList;
         } catch (DAOException e) {
             log.error("DAO exception",e);
             throw new ServiceException(e);
@@ -75,8 +77,9 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill readBillByReservationId(Long reservationId) throws ServiceException {
         try {
+            Bill bill = billDao.readBillByReservationId(reservationId);
             log.info("Bill by reservation id: '" + reservationId +"' read");
-            return billDao.readBillByReservationId(reservationId);
+            return bill;
         } catch (DAOException e) {
             log.error("DAO exception",e);
             throw new ServiceException(e);

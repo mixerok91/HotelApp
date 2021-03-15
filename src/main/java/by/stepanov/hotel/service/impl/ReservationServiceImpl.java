@@ -1,15 +1,15 @@
 package by.stepanov.hotel.service.impl;
 
+import by.stepanov.hotel.dao.BillDao;
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.DaoProvider;
 import by.stepanov.hotel.dao.ReservationDao;
+import by.stepanov.hotel.entity.Bill;
 import by.stepanov.hotel.entity.BookStatus;
 import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.entity.User;
-import by.stepanov.hotel.service.BillService;
 import by.stepanov.hotel.service.ReservationService;
 import by.stepanov.hotel.service.ServiceException;
-import by.stepanov.hotel.service.ServiceProvider;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
@@ -20,8 +20,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     private static final Logger log = Logger.getLogger(ReservationServiceImpl.class);
 
-    private ReservationDao reservationDao = DaoProvider.getInstance().getReservationDao();
-    private BillService billService = ServiceProvider.getBillService();
+    private final ReservationDao reservationDao = DaoProvider.getInstance().getReservationDao();
+    private final BillDao billDao = DaoProvider.getInstance().getBillDao();
 
     @Override
     public void createReservation(Reservation reservation) throws ServiceException {
@@ -29,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservationDao.createReservation(reservation);
             log.info("Reservation with id: '" + reservation.getId() + "' created");
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -38,12 +38,12 @@ public class ReservationServiceImpl implements ReservationService {
     public Reservation readReservation(long reservationId) throws ServiceException {
         try {
             Reservation reservation = reservationDao.readReservation(reservationId);
-            reservation.setBill(billService.readBillByReservationId(reservationId));
-
+            Bill bill = billDao.readBillByReservationId(reservationId);
+            reservation.setBill(bill);
             log.info("Reservation with id: '" + reservation.getId() + "' read");
             return reservation;
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -54,7 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservationDao.updateReservation(reservation);
             log.info("Reservation with id: '" + reservation.getId() + "' updated");
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -65,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservationDao.deleteReservation(reservationId);
             log.info("Reservation with id: '" + reservationId + "' deleted");
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -76,8 +76,8 @@ public class ReservationServiceImpl implements ReservationService {
             List<Reservation> reservations = reservationDao.getAllReservations();
             log.info("All reservations read");
             return reservations;
-        }catch (DAOException e) {
-            log.error("DAO exception",e);
+        } catch (DAOException e) {
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -88,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
             log.info("All reservations after date: '" + date + "' read");
             return reservationDao.getReservationsByAfterDate(date);
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -100,7 +100,7 @@ public class ReservationServiceImpl implements ReservationService {
             log.info("All '" + user.getEmail() + "'s'  reservations read");
             return reservations;
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
     }
@@ -115,7 +115,7 @@ public class ReservationServiceImpl implements ReservationService {
                     .collect(Collectors.toList());
             log.info("All reservations from: '" + fromDate + "' to '" + beforeDate + "' read");
         } catch (DAOException e) {
-            log.error("DAO exception",e);
+            log.error("DAO exception", e);
             throw new ServiceException(e);
         }
         return reservationList;
@@ -125,8 +125,8 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Reservation> getActualUserReservations(User user) throws ServiceException {
         List<Reservation> userReservations = getReservationsByUser(user);
         userReservations.removeIf(reservation -> reservation.getBookStatus().equals(BookStatus.CANCELLED)
-                ||reservation.getBookStatus().equals(BookStatus.FINISHED)
-                ||reservation.getInDate().isBefore(LocalDate.now()));
+                || reservation.getBookStatus().equals(BookStatus.FINISHED)
+                || reservation.getInDate().isBefore(LocalDate.now()));
         log.info("All actual '" + user.getEmail() + "'s' reservations read");
         return userReservations;
     }

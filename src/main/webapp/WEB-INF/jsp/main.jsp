@@ -19,75 +19,82 @@
     <fmt:message bundle="${loc}" key="local.mainpage.ref.logout" var="logout"/>
     <fmt:message bundle="${loc}" key="local.mainpage.string.room_type_name" var="room_type_name"/>
     <fmt:message bundle="${loc}" key="local.mainpage.string.room_type_description" var="room_type_description"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
-<body>
-<div>
-    <%--Если пустая страница, перезагрузить--%>
-    <c:if test="${sessionScope.roomTypes == null}">
-        <c:redirect url="/mainController?command=main_page"/>
-    </c:if>
+<body class="body">
+<c:if test="${sessionScope.roomTypes == null}">
+    <c:redirect url="/mainController?command=main_page"/>
+</c:if>
+<div class="main_content">
+    <header>
+        <div class="lang_buttons">
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="ru">
+                <input type="submit" value="${rus_button}">
+            </form>
+            <form action="mainController" method="get">
+                <input type="hidden" name="command" value="change_locale">
+                <input type="hidden" name="lang" value="eng">
+                <input type="submit" value="${eng_button}">
+            </form>
+        </div>
+        <div class="welcome_to_page">
+            <h1>${welcome}</h1>
+            <c:if test="${sessionScope.user != null}">
+                <div>${hello} ${sessionScope.user.firstName}</div>
+            </c:if>
+        </div>
+        <%--Ссылка на логинацию/регистрацию или логаут--%>
+        <div class="references">
+            <c:if test="${sessionScope.user == null}">
+                <a href="mainController?command=registration_page">${to_registration_page}</a>
+                <a href="mainController?command=login_page">${to_login_page}</a>
+            </c:if>
+            <c:if test="${sessionScope.user != null}">
+                <a href="mainController?command=logout">${logout}</a>
+                <%--В кабинет узера--%>
+                <a href="mainController?command=user_cabinet_page">${to_user_cabinet}</a>
+                <%--В кабинет админа--%>
+                <c:if test="${sessionScope.user.role.name().equals('ADMIN')}">
+                    <a href="mainController?command=admin_cabinet_page">${to_admin_cabinet}</a>
+                </c:if>
+            </c:if>
+            <%--К бронированию номера--%>
+            <a href="mainController?command=reservation_page">${to_reservation_page}</a>
+        </div>
+    </header>
 
-    <h1>${welcome}</h1>
-    <c:if test="${sessionScope.user != null}">
-        <div>${hello} ${sessionScope.user.firstName}</div>
-    </c:if>
 
-    <%--Смена локали--%>
-    <form action="mainController" method="get">
-        <input type="hidden" name="command" value="change_locale">
-        <input type="hidden" name="lang" value="ru">
-        <input type="submit" value="${rus_button}">
-    </form>
-    <form action="mainController" method="get">
-        <input type="hidden" name="command" value="change_locale">
-        <input type="hidden" name="lang" value="eng">
-        <input type="submit" value="${eng_button}">
-    </form>
-    <%--Ссылка на логинацию/регистрацию или логаут--%>
-    <c:if test="${sessionScope.user == null}">
-        <a href="mainController?command=registration_page">${to_registration_page}</a><br>
-        <a href="mainController?command=login_page">${to_login_page}</a><br>
-    </c:if>
-    <c:if test="${sessionScope.user != null}">
-        <a href="mainController?command=logout">${logout}</a><br>
-        <%--В кабинет узера--%>
-        <a href="mainController?command=user_cabinet_page">${to_user_cabinet}</a><br>
-        <%--В кабинет админа--%>
-        <c:if test="${sessionScope.user.role.name().equals('ADMIN')}">
-            <a href="mainController?command=admin_cabinet_page">${to_admin_cabinet}</a><br>
-        </c:if>
-    </c:if>
-
-
-    <%--К бронированию номера--%>
-    <a href="mainController?command=reservation_page">${to_reservation_page}</a>
-    <%--Отображение типов номеров--%>
     <br>
-    <div><h3>${description}</h3></div>
-    <div>
-        <c:forEach var="roomType" items="${sessionScope.roomTypes}">
-            <div>
-                <div>
-                        ${room_type_name}<br>
-                        ${roomType.typeName}
-                </div>
-                <div>
-                        ${room_type_description}<br>
-                    <c:choose>
-                        <c:when test="${sessionScope.localization.equals('ru')}">
-                            ${roomType.descriptionRus}
-                        </c:when>
-                        <c:otherwise>
-                            ${roomType.descriptionEng}
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-            -----------------------------------------------------------------------------------
-            <br>
-        </c:forEach>
+    <div class="horizontal_center">
+        <div><h3>${description}</h3></div>
+        <div>
+            <ul>
+                <c:forEach var="roomType" items="${sessionScope.roomTypes}">
+                    <li>
+                        <div>
+                            <div>
+                                    ${room_type_name}<br>
+                                    ${roomType.typeName}
+                            </div>
+                            <div>
+                                    ${room_type_description}<br>
+                                <c:choose>
+                                    <c:when test="${sessionScope.localization.equals('ru')}">
+                                        ${roomType.descriptionRus}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${roomType.descriptionEng}
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
     </div>
-
 </div>
 </body>
 </html>

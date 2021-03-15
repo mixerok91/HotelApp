@@ -1,0 +1,99 @@
+a{
+    color: darkblue;
+    background: silver;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100px;
+    height: 34px;
+    border: black 2px solid;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    text-decoration: none;
+    margin: 3px 3px 3px 3px;
+}
+.references{
+    text-align: center;
+    vertical-align: center;
+    width: 98%;
+    height: 44px;
+    margin: 1px 1% 1px 1%;
+    border: darkslategrey 2px solid;
+    border-radius: 8px;
+    padding: 2px 2px 2px 2px;
+}
+
+.body{
+    background: burlywood;
+}
+
+.horizontal_center{
+    margin: 10px auto;
+    width: 85%;
+    padding: 5px;
+}
+
+.welcome_to_page{
+    margin-right: auto;
+    margin-left: auto;
+    width: 60%;
+    color: darkslategrey;
+    text-align: center;
+}
+
+.main_content{
+    background: white;
+    margin: 20px 50px 20px 50px;
+    padding: 10px 10px 10px 10px;
+    border: 1px darkslategrey solid;
+    border-radius: 10px;
+}
+
+.lang_buttons{
+    display: block;
+    width: 40px;
+    height: 50px;
+    margin-left: 95%;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+ul{
+    list-style: none;
+    padding: 0 0 0 0;
+}
+
+li:nth-child(even){
+    background: lightgoldenrodyellow;
+    margin: 5px 0 5px 0;
+    border: darkslategrey solid 1px;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+li:nth-child(odd){
+    background: wheat;
+    margin: 5px 0 5px 0;
+    border: darkslategrey solid 1px;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.center_form{
+    margin: auto;
+    align-content: center;
+    width: 200px;
+    text-align: center;
+}
+
+.cabinet_buttons{
+    margin: 5px 0;
+    text-align: center;
+}
+
+.cabinet_button{
+    padding: 3px;
+    display: inline-block;
+    height: 24px;
+}
