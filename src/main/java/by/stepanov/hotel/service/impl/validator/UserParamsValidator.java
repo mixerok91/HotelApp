@@ -12,24 +12,24 @@ import java.util.Map;
 
 public class UserParamsValidator {
 
-    public static final String OLD_PASSWORD_ERROR = "oldPasswordError";
-    public static final String NEW_PASSWORD_VALIDATION_ERROR = "newPasswordValidationError";
-    public static final String OLD_PASSWORD_INCORRECT = "Old password incorrect";
-    public static final String NEW_PASSWORD_IS_NOT_VALID = "New password is not valid";
-    public static final String THE_NEW_PASSWORD_MUST_BE_DIFFERENT_FROM_THE_OLD_ONE = "The new password must be different from the old one";
-    public static final String FIRS_NAME_ERROR = "firsNameError";
-    public static final String SUR_NAME_ERROR = "surNameError";
-    public static final String NEW_FIRST_NAME_IS_NOT_VALID = "New first name is not valid";
-    public static final String NEW_SURNAME_IS_NOT_VALID = "New surname is not valid";
-    public static final String EMAIL_ERROR = "emailError";
-    public static final String EMAIL_IS_NOT_VALID = "Email is not valid";
-    public static final String USER_WITH_THAT_EMAIL_DOES_NOT_EXIST = "User with that email does not exist";
-    public static final String PASSWORD_ERROR = "passwordError";
-    public static final String PASSWORD_IS_NOT_VALID = "Password is not valid";
-    public static final String THAT_USER_HAS_OTHER_PASSWORD = "That user has other password";
-    public static final String USER_WITH_THAT_EMAIL_ALREADY_EXIST = "User with that email already exist";
-    public static final String FIRST_NAME_IS_NOT_VALID = "First name is not valid";
-    public static final String SURNAME_IS_NOT_VALID = "Surname is not valid";
+    private static final String OLD_PASSWORD_ERROR = "oldPasswordError";
+    private static final String NEW_PASSWORD_VALIDATION_ERROR = "newPasswordValidationError";
+    private static final String OLD_PASSWORD_INCORRECT = "Old password incorrect";
+    private static final String NEW_PASSWORD_IS_NOT_VALID = "New password is not valid";
+    private static final String THE_NEW_PASSWORD_MUST_BE_DIFFERENT_FROM_THE_OLD_ONE = "The new password must be different from the old one";
+    private static final String FIRS_NAME_ERROR = "firsNameError";
+    private static final String SUR_NAME_ERROR = "surNameError";
+    private static final String NEW_FIRST_NAME_IS_NOT_VALID = "New first name is not valid";
+    private static final String NEW_SURNAME_IS_NOT_VALID = "New surname is not valid";
+    private static final String EMAIL_ERROR = "emailError";
+    private static final String EMAIL_IS_NOT_VALID = "Email is not valid";
+    private static final String USER_WITH_THAT_EMAIL_DOES_NOT_EXIST = "User with that email does not exist";
+    private static final String PASSWORD_ERROR = "passwordError";
+    private static final String PASSWORD_IS_NOT_VALID = "Password is not valid";
+    private static final String THAT_USER_HAS_OTHER_PASSWORD = "That user has other password";
+    private static final String USER_WITH_THAT_EMAIL_ALREADY_EXIST = "User with that email already exist";
+    private static final String FIRST_NAME_IS_NOT_VALID = "First name is not valid";
+    private static final String SURNAME_IS_NOT_VALID = "Surname is not valid";
 
     private static final Logger log = Logger.getLogger(UserParamsValidator.class);
 
