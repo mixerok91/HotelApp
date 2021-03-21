@@ -8,6 +8,7 @@ import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.impl.UploadedFileService;
 import by.stepanov.hotel.service.impl.validator.RoomValidator;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ import java.util.Collection;
 
 public class CreateRoom implements Command {
 
+    private static final Logger log = Logger.getLogger(CreateRoom.class);
+
     private static final String LOGIN_PAGE = "mainController?command=login_page";
     private static final String PERSONS_NUMBER = "personsNumber";
     private static final String COST_PER_DAY = "costPerDay";
@@ -25,13 +28,14 @@ public class CreateRoom implements Command {
     private static final String ROOM_TYPE = "roomType";
     private static final String MESSAGE = "message";
     private static final String ROOM_ADMINISTRATION_PAGE_CONTROLLER = "mainController?command=room_administration_page";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
-    public static final String PARSE_NUMBER_ERROR = "Can't parse number.";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+    private static final String PARSE_NUMBER_ERROR = "Can't parse number.";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         if (request.getSession() == null) {
+            log.info("Redirected to login page because session does not exist");
             response.sendRedirect(LOGIN_PAGE);
         }
 
@@ -52,15 +56,19 @@ public class CreateRoom implements Command {
             if (RoomValidator.isRoomNameAppropriate(room)) {
                 room.setPicturePath(UploadedFileService.saveUploadedFile(absolutePath, parts, room.getRoomNumber()));
                 roomService.createRoom(room);
+                log.info("Redirect to: " + ROOM_ADMINISTRATION_PAGE_CONTROLLER);
                 response.sendRedirect(ROOM_ADMINISTRATION_PAGE_CONTROLLER);
             } else {
                 request.setAttribute(MESSAGE, "Room '" + room.getRoomNumber() + "' already exist");
+                log.info("Dispatched to " + ROOM_ADMINISTRATION_PAGE_CONTROLLER + " with error");
                 request.getRequestDispatcher(ROOM_ADMINISTRATION_PAGE_CONTROLLER).forward(request, response);
             }
         } catch (NumberFormatException e) {
             request.setAttribute(MESSAGE, PARSE_NUMBER_ERROR);
+            log.info("Dispatched to " + ROOM_ADMINISTRATION_PAGE_CONTROLLER + " with error");
             request.getRequestDispatcher(ROOM_ADMINISTRATION_PAGE_CONTROLLER).forward(request, response);
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

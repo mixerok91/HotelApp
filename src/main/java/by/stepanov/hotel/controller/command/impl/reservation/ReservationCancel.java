@@ -6,6 +6,7 @@ import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.service.ReservationService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ReservationCancel implements Command {
+
+    private static final Logger log = Logger.getLogger(ReservationCancel.class);
 
     private static final String LOGIN_PAGE = "mainController?command=login_page";
     private static final String RESERVATION_ID = "reservationId";
@@ -23,6 +26,7 @@ public class ReservationCancel implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         if (request.getSession() == null){
+            log.info("Redirected to login page because session does not exist");
             response.sendRedirect(LOGIN_PAGE);
         }
 
@@ -34,9 +38,10 @@ public class ReservationCancel implements Command {
             reservation.setBookStatus(BookStatus.CANCELLED);
 
             reservationService.updateReservation(reservation);
-
+            log.info("Redirect to: " + USER_CABINET_PAGE_CONTROLLER);
             response.sendRedirect(USER_CABINET_PAGE_CONTROLLER);
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

@@ -11,10 +11,10 @@ import java.io.IOException;
 
 public class Logout implements Command {
 
-    public static final String USER = "user";
-    public static final String MAIN_PAGE_CONTROLLER = "mainController?command=main_page";
+    private static final String USER = "user";
+    private static final String MAIN_PAGE_CONTROLLER = "mainController?command=main_page";
 
-    static final Logger log = Logger.getLogger(Logout.class);
+    private static final Logger log = Logger.getLogger(Logout.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -23,11 +23,13 @@ public class Logout implements Command {
             log.info("User with email: '" + user.getEmail()  + "' logged out");
             request.getSession().removeAttribute(USER);
         }
+        log.info("Redirect to: " + MAIN_PAGE_CONTROLLER);
         response.sendRedirect(MAIN_PAGE_CONTROLLER);
     }
 
     @Override
     public void savePathToSession(HttpServletRequest request) {
         request.getSession().setAttribute("lastPath", MAIN_PAGE_CONTROLLER);
+        log.info("Save last path to session: " + MAIN_PAGE_CONTROLLER);
     }
 }

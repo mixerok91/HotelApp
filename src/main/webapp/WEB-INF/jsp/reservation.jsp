@@ -56,11 +56,21 @@
         <form action="mainController" method="get" class="center_form">
             <input type="hidden" name="command" value="find_suitable_rooms">
             <div class="errorText">${requestScope.dateError}</div>
-            ${in_date}
-            <input type="date" name="inDate" required value="${requestScope.inDate}">
-            ${out_date}
-            <input type="date" name="outDate" required value="${requestScope.outDate}">
-            ${room_type}
+            <div>
+                ${in_date}
+            </div>
+            <div>
+                <input type="date" name="inDate" required value="${requestScope.inDate}">
+            </div>
+            <div>
+                ${out_date}
+            </div>
+            <div>
+                <input type="date" name="outDate" required value="${requestScope.outDate}">
+            </div>
+            <div>
+                ${room_type}
+            </div>
             <div>
                 <select name="roomType">
                     <option>Any type</option>
@@ -69,7 +79,9 @@
                     </c:forEach>
                 </select>
             </div>
-            <div><input type="submit" value="${search_rooms}"></div>
+            <div>
+                <input type="submit" value="${search_rooms}">
+            </div>
         </form>
         <div>
             <div class="center_form" style="font-size: 14px">

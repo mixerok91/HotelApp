@@ -4,6 +4,7 @@ import by.stepanov.hotel.controller.command.Command;
 import by.stepanov.hotel.entity.Reservation;
 import by.stepanov.hotel.entity.User;
 import by.stepanov.hotel.service.*;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,25 +14,28 @@ import java.util.List;
 
 public class GetUsersReservationsByEmail implements Command {
 
-    public static final String USER_NOT_FOUND = "User not found";
-    public static final String ADMIN_PAGE_MESSAGE = "adminPageMessage";
-    public static final String USER_EMAIL = "userEmail";
-    public static final String ADMIN_PAGE_USER = "adminPageUser";
-    public static final String ADMIN_PAGE_USER_RESERVATIONS = "adminPageUserReservations";
-    public static final String ADMIN_CABINET = "adminCabinet";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+    private static final Logger log = Logger.getLogger(GetUsersReservationsByEmail.class);
+
+    private static final String USER_NOT_FOUND = "User not found";
+    private static final String ADMIN_PAGE_MESSAGE = "adminPageMessage";
+    private static final String USER_EMAIL = "userEmail";
+    private static final String ADMIN_PAGE_USER = "adminPageUser";
+    private static final String ADMIN_PAGE_USER_RESERVATIONS = "adminPageUserReservations";
+    private static final String ADMIN_CABINET = "adminCabinet";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
     private static final String LOGIN_PAGE = "mainController?command=login_page";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        if (request.getSession() == null){
+            log.info("Redirected to login page because session does not exist");
+            response.sendRedirect(LOGIN_PAGE);
+        }
+
         UserService userService = ServiceProvider.getUserService();
         ReservationService reservationService = ServiceProvider.getReservationService();
         BillService billService = ServiceProvider.getBillService();
-
-        if (request.getSession() == null){
-            response.sendRedirect(LOGIN_PAGE);
-        }
 
         String userEmail = request.getParameter(USER_EMAIL);
 
@@ -47,8 +51,11 @@ public class GetUsersReservationsByEmail implements Command {
             } else {
                 request.setAttribute(ADMIN_PAGE_MESSAGE, USER_NOT_FOUND);
             }
+
+            log.info("Dispatched to " + ADMIN_CABINET + " with reservation list by email");
             request.getRequestDispatcher(ADMIN_CABINET).forward(request, response);
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

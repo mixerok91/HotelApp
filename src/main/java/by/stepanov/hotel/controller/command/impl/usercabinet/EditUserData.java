@@ -6,6 +6,7 @@ import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.UserService;
 import by.stepanov.hotel.service.impl.validator.UserParamsValidator;
+import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.ServletException;
@@ -16,21 +17,24 @@ import java.util.Map;
 
 public class EditUserData implements Command {
 
+    private static final Logger log = Logger.getLogger(EditUserData.class);
+
     private static final String LOGIN_PAGE = "mainController?command=login_page";
-    public static final String USER = "user";
-    public static final String OLD_PASSWORD = "oldPassword";
-    public static final String NEW_PASSWORD = "newPassword";
-    public static final String FIRST_NAME = "firstName";
-    public static final String SUR_NAME = "surName";
-    public static final String ERRORS = "errors";
-    public static final String EDIT_USER_DATA = "/editUserData";
-    public static final String USER_CABINET_PAGE_CONTROLLER = "mainController?command=user_cabinet_page";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
+    private static final String USER = "user";
+    private static final String OLD_PASSWORD = "oldPassword";
+    private static final String NEW_PASSWORD = "newPassword";
+    private static final String FIRST_NAME = "firstName";
+    private static final String SUR_NAME = "surName";
+    private static final String ERRORS = "errors";
+    private static final String EDIT_USER_DATA = "/editUserData";
+    private static final String USER_CABINET_PAGE_CONTROLLER = "mainController?command=user_cabinet_page";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         if (request.getSession() == null){
+            log.info("Redirected to login page because session does not exist");
             response.sendRedirect(LOGIN_PAGE);
         }
 
@@ -48,6 +52,7 @@ public class EditUserData implements Command {
 
             if (!errors.isEmpty()){
                 request.setAttribute(ERRORS, errors);
+                log.info("Dispatched to " + EDIT_USER_DATA + " with error");
                 request.getRequestDispatcher(EDIT_USER_DATA).forward(request, response);
             } else {
                 currentUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
@@ -55,9 +60,12 @@ public class EditUserData implements Command {
                 currentUser.setSurName(surName);
                 userService.updateUser(currentUser);
                 request.getSession().setAttribute(USER, currentUser);
+
+                log.info("Redirect to: " + USER_CABINET_PAGE_CONTROLLER);
                 response.sendRedirect(USER_CABINET_PAGE_CONTROLLER);
             }
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

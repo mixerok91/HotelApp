@@ -35,6 +35,7 @@ public class MainController extends HttpServlet {
         currentCommandName = request.getParameter(COMMAND);
 
         command = commandProvider.getCommand(currentCommandName);
+
         command.savePathToSession(request);
         command.execute(request, response);
     }

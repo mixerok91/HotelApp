@@ -7,6 +7,7 @@ import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.UserService;
 import by.stepanov.hotel.service.impl.validator.UserParamsValidator;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,15 +17,17 @@ import java.util.Map;
 
 public class Registration implements Command {
 
-    public static final String EMAIL = "email";
-    public static final String PASSWORD = "password";
-    public static final String FIRST_NAME = "firstName";
-    public static final String SUR_NAME = "surName";
-    public static final String USER = "user";
-    public static final String ERRORS = "errors";
-    public static final String REGISTRATION_PAGE = "/registration";
-    public static final String LOGIN_PAGE = "login";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
+    private static final Logger log = Logger.getLogger(Registration.class);
+
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String FIRST_NAME = "firstName";
+    private static final String SUR_NAME = "surName";
+    private static final String USER = "user";
+    private static final String ERRORS = "errors";
+    private static final String REGISTRATION_PAGE = "/registration";
+    private static final String LOGIN_PAGE = "login";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, with registration.";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -46,12 +49,15 @@ public class Registration implements Command {
 
             if (!errors.isEmpty()){
                 request.setAttribute(ERRORS, errors);
+                log.info("Dispatched to " + REGISTRATION_PAGE + " with error");
                 request.getRequestDispatcher(REGISTRATION_PAGE).forward(request,response);
             } else {
                 userService.createUser(user);
+                log.info("Redirect to: " + LOGIN_PAGE);
                 response.sendRedirect(LOGIN_PAGE);
             }
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

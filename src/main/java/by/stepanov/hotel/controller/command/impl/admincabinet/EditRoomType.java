@@ -6,6 +6,7 @@ import by.stepanov.hotel.service.RoomTypeService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.impl.validator.RoomTypeValidator;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +15,15 @@ import java.io.IOException;
 
 public class EditRoomType implements Command {
 
-    public static final String ROOM_TYPE_ID = "roomTypeId";
-    public static final String TYPE_NAME = "typeName";
-    public static final String RUSSIAN_DESCRIPTION = "russianDescription";
-    public static final String ENGLISH_DESCRIPTION = "englishDescription";
-    public static final String MESSAGE = "message";
-    public static final String ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER = "mainController?command=room_type_administration_page";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+    private static final Logger log = Logger.getLogger(EditRoomType.class);
+
+    private static final String ROOM_TYPE_ID = "roomTypeId";
+    private static final String TYPE_NAME = "typeName";
+    private static final String RUSSIAN_DESCRIPTION = "russianDescription";
+    private static final String ENGLISH_DESCRIPTION = "englishDescription";
+    private static final String MESSAGE = "message";
+    private static final String ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER = "mainController?command=room_type_administration_page";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -37,12 +40,15 @@ public class EditRoomType implements Command {
 
             if (RoomTypeValidator.isRoomTypeNameAppropriate(roomType)){
                 roomTypeService.updateRoomType(roomType);
+                log.info("Redirect to: " + ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER);
                 response.sendRedirect(ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER);
             } else {
                 request.setAttribute(MESSAGE, "RoomType '" + roomType.getTypeName() + "' already exist");
+                log.info("Dispatched to " + ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER + " with error");
                 request.getRequestDispatcher(ROOM_TYPE_ADMINISTRATION_PAGE_CONTROLLER).forward(request, response);
             }
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }

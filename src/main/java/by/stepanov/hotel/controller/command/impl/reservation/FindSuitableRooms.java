@@ -6,6 +6,7 @@ import by.stepanov.hotel.service.RoomService;
 import by.stepanov.hotel.service.ServiceException;
 import by.stepanov.hotel.service.ServiceProvider;
 import by.stepanov.hotel.service.impl.validator.SuitableDateValidator;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +16,15 @@ import java.util.List;
 
 public class FindSuitableRooms implements Command {
 
-    public static final String IN_DATE = "inDate";
-    public static final String OUT_DATE = "outDate";
-    public static final String ROOM_TYPE = "roomType";
-    public static final String DATE_ERROR = "dateError";
-    public static final String RESERVATION_PAGE = "reservation";
-    public static final String FOUND_ROOMS = "foundRooms";
-    public static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
+    private static final Logger log = Logger.getLogger(FindSuitableRooms.class);
+
+    private static final String IN_DATE = "inDate";
+    private static final String OUT_DATE = "outDate";
+    private static final String ROOM_TYPE = "roomType";
+    private static final String DATE_ERROR = "dateError";
+    private static final String RESERVATION_PAGE = "reservation";
+    private static final String FOUND_ROOMS = "foundRooms";
+    private static final String ERROR_PAGE = "error?errorMessage=Ooops, something went wrong, try later";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -38,14 +41,17 @@ public class FindSuitableRooms implements Command {
         try {
             if (SuitableDateValidator.checkDates(inDate, outDate) != null){
                 request.setAttribute(DATE_ERROR, SuitableDateValidator.checkDates(inDate, outDate));
+                log.info("Dispatched to " + RESERVATION_PAGE + " with error");
+                request.getRequestDispatcher(RESERVATION_PAGE).forward(request, response);
+            } else {
+                List<Room> freeRooms = roomService.getFreeRooms(inDate, outDate, roomType);
+
+                request.setAttribute(FOUND_ROOMS, freeRooms);
+                log.info("Dispatched to " + RESERVATION_PAGE + " with free rooms");
                 request.getRequestDispatcher(RESERVATION_PAGE).forward(request, response);
             }
-
-            List<Room> freeRooms = roomService.getFreeRooms(inDate, outDate, roomType);
-
-            request.setAttribute(FOUND_ROOMS, freeRooms);
-            request.getRequestDispatcher(RESERVATION_PAGE).forward(request, response);
         } catch (ServiceException e) {
+            log.info("Redirect to error page");
             response.sendRedirect(ERROR_PAGE);
         }
     }
