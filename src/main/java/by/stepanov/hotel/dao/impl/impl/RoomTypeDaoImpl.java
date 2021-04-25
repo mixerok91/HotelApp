@@ -1,9 +1,10 @@
-package by.stepanov.hotel.dao.impl.mysql;
+package by.stepanov.hotel.dao.impl.impl;
 
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.RoomTypeDao;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPool;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolProvider;
 import by.stepanov.hotel.entity.RoomType;
 import org.apache.log4j.Logger;
 
@@ -24,7 +25,7 @@ public class RoomTypeDaoImpl implements RoomTypeDao {
     private static final String DELETE_ROOM_TYPE_QUERY = "DELETE FROM room_type WHERE id=?";
     private static final String READ_ALL_ROOM_TYPES_QUERY = "SELECT * FROM room_type ORDER BY id";
 
-    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPoolProvider.getConnectionPool();
 
     private static final Logger log = Logger.getLogger(RoomTypeDaoImpl.class);
 

@@ -1,8 +1,9 @@
 package by.stepanov.hotel.entity;
 
+import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 
-public class Bill {
+public class Bill implements Serializable {
     private Long id;
     private double totalAmount;
     private boolean isPaid;

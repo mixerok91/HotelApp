@@ -1,9 +1,10 @@
-package by.stepanov.hotel.dao.impl.mysql;
+package by.stepanov.hotel.dao.impl.impl;
 
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.UserDao;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPool;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolProvider;
 import by.stepanov.hotel.entity.Role;
 import by.stepanov.hotel.entity.User;
 import org.apache.log4j.Logger;
@@ -23,7 +24,7 @@ public class UserDaoImpl implements UserDao {
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id=?";
     private static final String READ_ALL_USERS_QUERY = "SELECT * FROM users ORDER BY id";
 
-    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPoolProvider.getConnectionPool();
 
     private static final Logger log = Logger.getLogger(UserDaoImpl.class);
 

@@ -1,9 +1,10 @@
 package by.stepanov.hotel.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable {
     private Long id;
     private String email;
     private String password;

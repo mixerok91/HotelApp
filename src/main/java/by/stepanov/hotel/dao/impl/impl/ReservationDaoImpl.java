@@ -1,9 +1,10 @@
-package by.stepanov.hotel.dao.impl.mysql;
+package by.stepanov.hotel.dao.impl.impl;
 
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.ReservationDao;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPool;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolProvider;
 import by.stepanov.hotel.entity.*;
 import org.apache.log4j.Logger;
 
@@ -64,7 +65,7 @@ public class ReservationDaoImpl implements ReservationDao {
     private static final String GET_LAST_INSERT_ID =
             "SELECT LAST_INSERT_ID() FROM reservations";
 
-    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPoolProvider.getConnectionPool();
 
     private static final Logger log = Logger.getLogger(ReservationDaoImpl.class);
 

@@ -1,9 +1,10 @@
 package by.stepanov.hotel.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Reservation {
+public class Reservation implements Serializable {
 
     private Long id;
     private LocalDateTime creationTime;

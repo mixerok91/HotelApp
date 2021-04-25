@@ -15,6 +15,7 @@ public class ChangeLocale implements Command {
     private static final String LOCALIZATION = "localization";
     private static final String LANG = "lang";
     private static final String LAST_PATH = "lastPath";
+    private static final String MAIN_PAGE = "mainController?command=main_page";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -22,10 +23,16 @@ public class ChangeLocale implements Command {
         request.getSession().setAttribute(LOCALIZATION, lang);
         log.info("Set attribute " + LOCALIZATION + " to session");
 
-        String lastPath = String.valueOf(request.getSession().getAttribute(LAST_PATH));
-        if (lastPath != null){
+        if (request.getSession().getAttribute(LAST_PATH) != null) {
+            String lastPath = String.valueOf(request.getSession().getAttribute(LAST_PATH));
             log.info("Redirect to " + lastPath);
             response.sendRedirect(lastPath);
+        }
+
+        if (request.getSession().getAttribute(LAST_PATH) == null) {
+            String lastPath = String.valueOf(request.getSession().getAttribute(LAST_PATH));
+            log.info("Redirect to " + MAIN_PAGE);
+            response.sendRedirect(MAIN_PAGE);
         }
     }
 

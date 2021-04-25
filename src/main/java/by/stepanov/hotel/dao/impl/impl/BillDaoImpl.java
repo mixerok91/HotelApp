@@ -1,9 +1,10 @@
-package by.stepanov.hotel.dao.impl.mysql;
+package by.stepanov.hotel.dao.impl.impl;
 
 import by.stepanov.hotel.dao.BillDao;
 import by.stepanov.hotel.dao.DAOException;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPool;
-import by.stepanov.hotel.dao.impl.mysql.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPool;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolException;
+import by.stepanov.hotel.dao.impl.connectionpool.ConnectionPoolProvider;
 import by.stepanov.hotel.entity.*;
 import org.apache.log4j.Logger;
 
@@ -61,7 +62,7 @@ public class BillDaoImpl implements BillDao {
                     "JOIN room_type ON room_type.id = rooms.room_type_id " +
                     "WHERE reservations.id = ?";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPoolProvider.getConnectionPool();
 
     private static final Logger log = Logger.getLogger(BillDaoImpl.class);
 

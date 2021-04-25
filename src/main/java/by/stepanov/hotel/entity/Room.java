@@ -1,6 +1,8 @@
 package by.stepanov.hotel.entity;
 
-public class Room {
+import java.io.Serializable;
+
+public class Room implements Serializable {
 
     private Long id;
     private String roomNumber;

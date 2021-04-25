@@ -1,6 +1,6 @@
 package by.stepanov.hotel.dao;
 
-import by.stepanov.hotel.dao.impl.mysql.*;
+import by.stepanov.hotel.dao.impl.impl.*;
 
 public class DaoProvider {
 

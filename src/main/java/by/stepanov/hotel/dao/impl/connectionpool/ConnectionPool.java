@@ -1,4 +1,4 @@
-package by.stepanov.hotel.dao.impl.mysql.connectionpool;
+package by.stepanov.hotel.dao.impl.connectionpool;
 
 import org.apache.log4j.Logger;
 
@@ -11,11 +11,10 @@ import java.util.concurrent.Executor;
 
 public class ConnectionPool {
 
-    private static final Logger log = Logger.getLogger(ConnectionPool.class);
+    static final Logger log = Logger.getLogger(ConnectionPool.class);
 
-    private static final ConnectionPool instance = new ConnectionPool();
-    public static final String MESSAGE_CANT_FIND_DRIVER = "Can't find database driver class";
-    public static final String MESSAGE_SQL_EXCEPTION = "SQLException in Connecting pool";
+    private static final String MESSAGE_CANT_FIND_DRIVER = "Can't find database driver class";
+    private static final String MESSAGE_SQL_EXCEPTION = "SQLException in Connecting pool";
 
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
@@ -26,56 +25,9 @@ public class ConnectionPool {
     private String password;
     private int poolSize;
 
-    public static ConnectionPool getInstance() {
-        return instance;
-    }
 
-    private ConnectionPool() {
-        DBResourceManager dbResourceManager = DBResourceManager.getInstance();
-        driverName = dbResourceManager.getValue(DBParameter.DB_DRIVER);
-        url = dbResourceManager.getValue(DBParameter.DB_URL);
-        user = dbResourceManager.getValue(DBParameter.DB_USER);
-        password = dbResourceManager.getValue(DBParameter.DB_PASSWORD);
-        try {
-            poolSize = Integer.parseInt(dbResourceManager.getValue(DBParameter.DB_POOL_SIZE));
-        } catch (NumberFormatException e){
-            poolSize = 5;
-        }
-        initPoolData();
-    }
+    protected ConnectionPool(){}
 
-    private void initPoolData() throws ConnectionPoolException {
-        try{
-            Class.forName(driverName);
-            givenAwayConQueue = new ArrayBlockingQueue<>(poolSize);
-            connectionQueue = new ArrayBlockingQueue<>(poolSize);
-
-            for (int i = 0; i < poolSize; i++) {
-                Connection connection = DriverManager.getConnection(url, user, password);
-                PooledConnection pooledConnection = new ConnectionPool.PooledConnection(connection);
-                connectionQueue.add(pooledConnection);
-            }
-        } catch (ClassNotFoundException e) {
-            log.error("Cant find driver exception",e);
-            throw new ConnectionPoolException(MESSAGE_CANT_FIND_DRIVER, e);
-        } catch (SQLException e) {
-            log.error("SQL exception",e);
-            throw new ConnectionPoolException(MESSAGE_SQL_EXCEPTION, e);
-        }
-    }
-
-    public void dispose(){
-        clearConnectionQueue();
-    }
-
-    private void clearConnectionQueue(){
-        try{
-            closeConnectionQueue(connectionQueue);
-            closeConnectionQueue(givenAwayConQueue);
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
 
     public void closeConnection(Connection con, Statement st){
         try {
@@ -167,6 +119,53 @@ public class ConnectionPool {
         }
         return connection;
     }
+
+    public void dispose(){
+        clearConnectionQueue();
+    }
+
+    public void initPoolData(String propertiesFileName) throws ConnectionPoolException {
+        DBResourceManager dbResourceManager = DBResourceManager.getInstance();
+        dbResourceManager.setProperties(propertiesFileName);
+
+        driverName = dbResourceManager.getValue(DBParameter.DB_DRIVER);
+        url = dbResourceManager.getValue(DBParameter.DB_URL);
+        user = dbResourceManager.getValue(DBParameter.DB_USER);
+        password = dbResourceManager.getValue(DBParameter.DB_PASSWORD);
+        try {
+            poolSize = Integer.parseInt(dbResourceManager.getValue(DBParameter.DB_POOL_SIZE));
+        } catch (NumberFormatException e){
+            poolSize = 5;
+        }
+        try{
+            Class.forName(driverName);
+            givenAwayConQueue = new ArrayBlockingQueue<>(poolSize);
+            connectionQueue = new ArrayBlockingQueue<>(poolSize);
+
+            for (int i = 0; i < poolSize; i++) {
+                Connection connection = DriverManager.getConnection(url, user, password);
+                PooledConnection pooledConnection = new ConnectionPool.PooledConnection(connection);
+                connectionQueue.add(pooledConnection);
+            }
+        } catch (ClassNotFoundException e) {
+            log.error("Cant find driver exception",e);
+            throw new ConnectionPoolException(MESSAGE_CANT_FIND_DRIVER, e);
+        } catch (SQLException e) {
+            log.error("SQL exception",e);
+            throw new ConnectionPoolException(MESSAGE_SQL_EXCEPTION, e);
+        }
+    }
+
+
+    private void clearConnectionQueue(){
+        try{
+            closeConnectionQueue(connectionQueue);
+            closeConnectionQueue(givenAwayConQueue);
+        }catch (SQLException e){
+            log.error("Error with clearing connection queue", e);
+        }
+    }
+
 
     private class PooledConnection implements Connection{
         private Connection connection;

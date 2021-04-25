@@ -13,6 +13,7 @@ public class RoomTypeValidator {
     private static RoomTypeService roomTypeService = ServiceProvider.getRoomTypeService();
 
     public static boolean isRoomTypeNameAppropriate(RoomType roomType) throws ServiceException {
+
         boolean nameAppropriate = true;
 
         try {

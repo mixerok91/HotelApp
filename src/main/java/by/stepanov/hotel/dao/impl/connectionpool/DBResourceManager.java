@@ -1,4 +1,4 @@
-package by.stepanov.hotel.dao.impl.mysql.connectionpool;
+package by.stepanov.hotel.dao.impl.connectionpool;
 
 import org.apache.log4j.Logger;
 
@@ -16,14 +16,6 @@ public class DBResourceManager {
     private Properties properties;
 
     private DBResourceManager() {
-        inputStream = this.getClass().getClassLoader().getResourceAsStream("database.properties");
-        properties = new Properties();
-        try {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            log.error("IOException",e);
-            throw new ConnectionPoolException(e);
-        }
     }
 
     public static DBResourceManager getInstance() {
@@ -32,5 +24,16 @@ public class DBResourceManager {
 
     public String getValue(String key) {
         return properties.getProperty(key);
+    }
+
+    public void setProperties(String propertiesFileName){
+        inputStream = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+        properties = new Properties();
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            log.error("IOException",e);
+            throw new ConnectionPoolException(e);
+        }
     }
 }

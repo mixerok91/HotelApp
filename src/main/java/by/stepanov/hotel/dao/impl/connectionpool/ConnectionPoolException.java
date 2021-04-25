@@ -1,4 +1,4 @@
-package by.stepanov.hotel.dao.impl.mysql.connectionpool;
+package by.stepanov.hotel.dao.impl.connectionpool;
 
 import java.io.IOException;
 
