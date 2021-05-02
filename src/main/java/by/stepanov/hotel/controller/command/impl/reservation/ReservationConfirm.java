@@ -45,7 +45,7 @@ public class ReservationConfirm implements Command {
             request.getSession().removeAttribute(SELECTED_BILL);
             log.info("Attribute " + SELECTED_BILL + " deleted from session");
 
-            log.info("Redirect to error page");
+            log.info("Redirect to main page");
             response.sendRedirect(MAIN_PAGE_CONTROLLER);
         } catch (ServiceException|ClassCastException e) {
             log.info("Redirect to error page");

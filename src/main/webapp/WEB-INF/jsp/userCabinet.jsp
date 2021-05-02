@@ -1,6 +1,7 @@
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="mytag" uri="selfMadeTag" %>
 <html>
 <head>
     <title>User's Cabinet</title>
@@ -48,7 +49,7 @@
             </form>
         </div>
         <div class="welcome_to_page">
-            <h1>${users_cabinet}</h1>
+            <h2>${users_cabinet}</h2>
         </div>
         <div class="references">
             <a href="mainController?command=main_page">${to_main_page}</a>
@@ -139,5 +140,6 @@
         </div>
     </div>
 </div>
+<mytag:madeByStepanov/>
 </body>
 </html>

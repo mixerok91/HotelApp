@@ -1,6 +1,7 @@
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="mytag" uri="selfMadeTag" %>
 <html>
 <head>
     <fmt:setLocale value="${sessionScope.localization}"/>
@@ -41,7 +42,7 @@
             </form>
         </div>
         <div class="welcome_to_page">
-            <h3>${welcome}</h3>
+            <h2>${welcome}</h2>
         </div>
         <div class="references">
             <a href="mainController?command=login_page">${to_login_page}</a>
@@ -69,5 +70,6 @@
         </form>
     </div>
 </div>
+<mytag:madeByStepanov/>
 </body>
 </html>

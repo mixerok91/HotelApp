@@ -1,4 +1,4 @@
-package by.stepanov.hotel.dao.impl.impl;
+package by.stepanov.hotel.dao.impl;
 
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.RoomDao;

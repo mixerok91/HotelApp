@@ -1,6 +1,7 @@
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="mytag" uri="selfMadeTag" %>
 <html>
 <head>
     <title>Reservation confirm</title>
@@ -51,7 +52,7 @@
             </form>
         </div>
         <div class="welcome_to_page">
-            <h3>${confirming_reservation}</h3>
+            <h2>${confirming_reservation}</h2>
         </div>
         <div class="references">
             <a href="mainController?command=main_page">${to_main_page}</a>
@@ -137,7 +138,7 @@
             </li>
         </ul>
     </div>
-
 </div>
+<mytag:madeByStepanov/>
 </body>
 </html>

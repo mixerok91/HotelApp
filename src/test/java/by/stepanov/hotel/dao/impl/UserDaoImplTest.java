@@ -1,4 +1,4 @@
-package by.stepanov.hotel.dao.impl.impl;
+package by.stepanov.hotel.dao.impl;
 
 import by.stepanov.hotel.dao.DAOException;
 import by.stepanov.hotel.dao.DaoProvider;
@@ -12,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserDaoImplTest {
-
+    private static final String DELETING_ALL_USERS_QUERY = "DELETE FROM users WHERE id >= 0";
     private static final String DATABASE_PROPERTY_FILE_NAME = "database_test.properties";
 
     private final UserDao userDao = DaoProvider.getInstance().getUserDao();
@@ -33,7 +34,9 @@ public class UserDaoImplTest {
     }
 
     @AfterClass
-    public static void connectionPoolDispose() throws DAOException {
+    public static void connectionPoolDispose() throws DAOException, SQLException {
+        ConnectionPoolProvider.getConnectionPool()
+                .takeConnection().createStatement().execute(DELETING_ALL_USERS_QUERY);
         ConnectionPoolProvider.getConnectionPool().dispose();
     }
 
@@ -86,5 +89,4 @@ public class UserDaoImplTest {
         user.setLastInDate(LocalDate.now());
         userDao.updateUser(user);
     }
-
 }

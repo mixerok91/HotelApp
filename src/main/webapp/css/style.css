@@ -97,3 +97,7 @@ li:nth-child(odd){
     display: inline-block;
     height: 24px;
 }
+
+.foot{
+    text-align: center;
+}

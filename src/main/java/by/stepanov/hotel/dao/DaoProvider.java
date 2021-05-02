@@ -1,6 +1,6 @@
 package by.stepanov.hotel.dao;
 
-import by.stepanov.hotel.dao.impl.impl.*;
+import by.stepanov.hotel.dao.impl.*;
 
 public class DaoProvider {
 
